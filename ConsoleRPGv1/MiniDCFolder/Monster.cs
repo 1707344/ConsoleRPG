@@ -17,7 +17,7 @@ namespace ConsoleRPG
         public Monster(Map map, int x, int y): base(map)
         {
             collider = new Collider(this, OnCollision);
-            renderer = new Renderer(this, '@', 2, ConsoleColor.Red, ConsoleColor.Black);
+            renderer = new Renderer(this, '@', 2, new Color(255, 43, 43), new Color(Color.Colors.Black));
             position = new Position(this, x, y);
             movement = new Movement(this);
             pathFinder = new PathFinder(this, 9);

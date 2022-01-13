@@ -16,15 +16,15 @@ namespace ConsoleRPG
         {
             freezingTime = 1500;
             position = new Position(this, x, y);
-            renderer = new Renderer(this, 'X', 0, ConsoleColor.Cyan, ConsoleColor.Black);
+            renderer = new Renderer(this, 'X', 0, new Color(145, 240, 255), new Color(Color.Colors.Black));
             collider = new Collider(this, OnCollision, true);
 
             collider.active = false;
             enableThread = new Thread(new ThreadStart(delegate ()
             {
-                renderer.backgroundColor = ConsoleColor.Cyan;
+                renderer.backgroundColor = new Color(145, 240, 255);
                 Thread.Sleep(3000);
-                renderer.backgroundColor = ConsoleColor.Black;
+                renderer.backgroundColor = new Color(Color.Colors.Black);
                 collider.active = true;
             }));
             
@@ -46,7 +46,7 @@ namespace ConsoleRPG
                 baseObject.GetComponent<Movement>().stopMovement = true;
                 Thread thread = new Thread(new ThreadStart(delegate ()
                 {
-                    ConsoleColor color = baseObject.GetComponent<Renderer>().textColor;
+                    Color color = baseObject.GetComponent<Renderer>().textColor;
                     baseObject.GetComponent<Renderer>().textColor = renderer.textColor;
 
                     collider.isTrigger = false;

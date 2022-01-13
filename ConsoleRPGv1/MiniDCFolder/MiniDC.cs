@@ -29,6 +29,22 @@ namespace ConsoleRPG
 
             Console.Clear();
 
+
+
+            Color black = new Color(Color.Colors.Black);
+            for (int y = 0; y < map.height; y++)
+            {
+                for (int x = 0; x < map.width * 2; x++)
+                {
+                    Console.SetCursorPosition(x, y);
+
+
+                    Console.Write("\x1b[48;2;" + black.r + ";" + black.g + ";" + black.b + "m");
+                    Console.Write("\x1b[38;2;" + black.r + ";" + black.g + ";" + black.b + "m");
+                    Console.Write(" ");
+                }
+            }
+
             GameLoop();//On main thread
 
 
@@ -52,12 +68,12 @@ namespace ConsoleRPG
 
                 InGameMenu.Display(map.height);
 
-                Console.BackgroundColor = ConsoleColor.Black;
+                //Console.BackgroundColor = ConsoleColor.Black;
                 time.SetFrameEndTime();
                 time.SetDeltaTime();
 
-                //Console.SetCursorPosition(60, 2);
-                //Console.WriteLine(time.GetDeltaTime() + "            ");
+                Console.SetCursorPosition(60, 2);
+                Console.WriteLine(time.GetDeltaTime() + "            ");
             }
 
         }

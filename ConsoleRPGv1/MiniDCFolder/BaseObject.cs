@@ -21,6 +21,7 @@ namespace ConsoleRPG
         {
             this.map = map;
             components = new List<Component>();
+            
         }
 
         /// <summary>

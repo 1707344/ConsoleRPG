@@ -5,6 +5,8 @@ using System.Threading;
 
 namespace ConsoleRPG
 {
+
+
     /// <summary>
     /// The ConsoleHandler is the intermediary between the game and the actual console. 
     /// Without this the console is too slow. 
@@ -16,6 +18,7 @@ namespace ConsoleRPG
             if(textColor != Console.ForegroundColor)
             {
                 Console.ForegroundColor = textColor;
+                
             }
 
             if(backgroundColor != Console.BackgroundColor)

@@ -16,7 +16,7 @@ namespace ConsoleRPG
         public Stairs(Map map, int x, int y): base(map)
         {
             position = new Position(this, x, y);
-            renderer = new Renderer(this, '/', 2, ConsoleColor.Gray, ConsoleColor.Black);
+            renderer = new Renderer(this, '/', 2, new Color(255, 244, 230), new Color(Color.Colors.Black));
             collider = new Collider(this, OnCollision);
         }
 

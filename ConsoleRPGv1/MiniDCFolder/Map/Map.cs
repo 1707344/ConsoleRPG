@@ -126,7 +126,7 @@ namespace ConsoleRPG
         {
             foreach (Renderer renderer in renderers)
             {
-                renderer.backgroundColor = ConsoleColor.Black;
+                renderer.backgroundColor = new Color(Color.Colors.Black);
             }
         }
     }
