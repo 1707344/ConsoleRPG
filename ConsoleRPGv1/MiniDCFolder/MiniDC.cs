@@ -1,0 +1,157 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+using System.Threading;
+using System.IO;
+
+namespace ConsoleRPG
+{
+    ////░▒▓
+    public static class MiniDC
+    {
+        public static Player player;
+        static Map map;
+        public static Time time;
+        public static bool gamePlaying = true;
+        
+
+        public static void PlayGame()
+        {
+            Console.CursorVisible = false;
+            time = new Time();
+            
+            Thread inputThread = new Thread(new ThreadStart(InputLoop));
+            inputThread.Start();
+            
+            map = TextFileToMap();
+            ShowStartMenu();
+
+
+            Console.Clear();
+
+            GameLoop();//On main thread
+
+
+
+            EndScreen.Display();
+
+        }
+
+        public static void GameLoop()
+        {
+
+            while (gamePlaying)
+            {
+                time.SetFrameStartTime();
+
+                Console.SetCursorPosition(0, 0);
+
+                map.Display();
+                Console.WriteLine();
+
+
+                InGameMenu.Display(map.height);
+
+                Console.BackgroundColor = ConsoleColor.Black;
+                time.SetFrameEndTime();
+                time.SetDeltaTime();
+
+                //Console.SetCursorPosition(60, 2);
+                //Console.WriteLine(time.GetDeltaTime() + "            ");
+            }
+
+        }
+
+        public static void InputLoop()
+        {
+            while (true)
+            {
+                InputHandler.Update();
+            }
+        }
+
+        static Map TextFileToMap()
+        {
+            string[] text = new string[10];
+            try
+            {
+                
+                text = System.IO.File.ReadAllLines(@"..\..\..\Maps\Map1.txt");
+            }
+            catch(Exception e)
+            {
+                Console.WriteLine(e.Message);
+                Environment.Exit(0);
+            }
+            for (int i = 0; i < text.Length; i++)
+            {
+                text[i] = text[i].Replace(" ", "");
+            }
+            char[,] charMap = new char[text.Length, text[0].Length];
+            //Cell[,] cellMap = new Cell[text.Length, text[0].Length];
+            Map map = new Map(charMap.GetLength(1), charMap.GetLength(0));
+
+           
+
+
+            for (int x = 0; x < text[0].Length; x++)
+            {
+                for (int y = 0; y < text.Length; y++)
+                {
+                    charMap[y, x] = text[y][x];
+                }
+            }
+
+
+
+            for (int i = 0; i < charMap.GetLength(1); i++)
+            {
+                for (int j = 0; j < charMap.GetLength(0); j++)
+                {
+                    
+
+                    switch(charMap[j, i])
+                    {
+                        case '#':
+                            map.objects.Add(new Wall(map, i, j));
+                            break;
+                        case 'F':
+                            map.objects.Add(new FreezingTrap(map, i, j));
+                            break;
+                        case 'M':
+                            map.objects.Add(new Monster(map, i, j));
+                            EndScreen.startingNumMonsters++;
+                            break;
+                        case 'P':
+                            player = new Player(map, i, j);
+                            map.objects.Add(player);
+                            break;
+                        case 'S':
+                            map.objects.Add(new Stairs(map, i, j));
+                            break;
+                        default:
+                            //objectInsideCell = null;
+                            break;
+                    }
+
+                    //cellMap[j, i].objectInsideCell = objectInsideCell;
+                }
+            }
+
+
+            return map;
+
+        }
+
+        static void ShowStartMenu()
+        {
+            StartMenu.isShowing = true;
+            while (StartMenu.isShowing)
+            {
+                StartMenu.Display();
+            }
+
+        }
+
+    }
+}
