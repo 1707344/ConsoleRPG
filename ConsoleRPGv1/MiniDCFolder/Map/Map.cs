@@ -120,5 +120,14 @@ namespace ConsoleRPG
             return positions.FindAll(x => x.x == posX && x.y == posY);
         }
         
+
+        //For testing
+        public void ResetBackgroundColors()
+        {
+            foreach (Renderer renderer in renderers)
+            {
+                renderer.backgroundColor = ConsoleColor.Black;
+            }
+        }
     }
 }

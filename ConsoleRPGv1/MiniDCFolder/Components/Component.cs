@@ -11,6 +11,9 @@ namespace ConsoleRPG
     /// </summary>
     public abstract class Component
     {
+        /// <summary>
+        /// The baseObject that the component is attached to.
+        /// </summary>
         public BaseObject obj;
         public Component(BaseObject obj)
         {

@@ -23,6 +23,10 @@ namespace ConsoleRPG
             components = new List<Component>();
         }
 
+        /// <summary>
+        /// Gets the map that the baseObject is located in
+        /// </summary>
+        /// <returns></returns>
         public Map GetMap()
         {
             return map;

@@ -67,6 +67,7 @@ namespace ConsoleRPG
 
             if (queue[0].previousNodes.Count <= 1)
             {
+                
                 finalNode = new Node(goal.x, goal.y, 0, 0, new List<Node>());
             }
             else
@@ -74,8 +75,23 @@ namespace ConsoleRPG
                 finalNode = queue[0].previousNodes[1];
             }
 
-            if(queue[0].previousNodes.Count > furthestDistance)
+            obj.GetMap().ResetBackgroundColors();
+
+            for (int i = 0; i < queue[0].previousNodes.Count; i++)
             {
+                Node node = queue[0].previousNodes[i];
+
+                List<Position> posAtPosition = obj.GetMap().GetObjectsAtPosition(node.x, node.y);
+
+                Renderer renderer = posAtPosition[0].obj.GetComponent<Renderer>();
+                renderer.backgroundColor = ConsoleColor.Blue;
+
+            }
+
+            if (queue[0].previousNodes.Count > furthestDistance || visitedNodes.Count == 150)
+            {
+                
+
                 return Movement.Direction.None;
             }
 
@@ -110,6 +126,9 @@ namespace ConsoleRPG
                 ){
                 return;
             }
+
+            //TESTING
+            //-------
 
             queue.Add(node);
         }
