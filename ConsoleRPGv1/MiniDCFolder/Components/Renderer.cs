@@ -25,6 +25,11 @@ namespace ConsoleRPG
         public int layer;
         public bool isVisible = true;
 
+        /// <summary>
+        /// Does the background also color in to the left and right(the empty spaces)?
+        /// </summary>
+        public bool backgroundStretches = false;
+
         public Renderer(BaseObject obj, char icon, int layer, Color color, bool isBackground): base(obj)
         {
             this.layer = layer;
@@ -46,14 +51,35 @@ namespace ConsoleRPG
             if (isBackground)
             {
                 Console.Write("\x1b[48;2;" + outputColor.r + ";" + outputColor.g + ";" + outputColor.b + "m");
-            }else
+
+                if (backgroundStretches)
+                {
+                    int left = Console.GetCursorPosition().Left;
+                    int top = Console.GetCursorPosition().Top;
+
+                    Console.SetCursorPosition(left - 1, top);
+                    Console.Write(' ');
+                    //Console.SetCursorPosition(left + 1, top);
+                    //Console.Write(' ');
+
+                    Console.SetCursorPosition(left, top);
+                    if(!obj.GetMap().emptySpaceWithColor.Exists(e => e.x + 1 == left && e.y == top))
+                    {
+                        obj.GetMap().emptySpaceWithColor.Add((left - 1, top, this));
+                    }
+
+                    //obj.GetMap().emptySpaceReset.Add((left + 1, top));
+
+                    Color black = new Color(Color.Colors.Black);
+                    Console.Write("\x1b[48;2;" + black.r + ";" + black.g + ";" + black.b + "m");
+                }
+            }
+            else
             {
                 Console.Write("\x1b[38;2;" + outputColor.r + ";" + outputColor.g + ";" + outputColor.b + "m");
                 Console.Write(icon);
 
 
-                Color black = new Color(Color.Colors.Black);
-                Console.Write("\x1b[48;2;" + black.r + ";" + black.g + ";" + black.b + "m");
             }
 
         }

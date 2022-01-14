@@ -7,6 +7,8 @@ namespace ConsoleRPGv1
 {
     class Program
     {
+
+
         //For full RGB colors----------
         [DllImport("kernel32.dll", SetLastError = true)]
         public static extern bool SetConsoleMode(IntPtr hConsoleHandle, int mode);
@@ -28,6 +30,7 @@ namespace ConsoleRPGv1
         static void ActivateColors()
         {
             var handle = GetStdHandle(-11);
+
             int mode;
             GetConsoleMode(handle, out mode);
             SetConsoleMode(handle, mode | 0x4);

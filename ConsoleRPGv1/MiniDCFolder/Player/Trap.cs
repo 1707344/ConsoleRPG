@@ -21,7 +21,7 @@ namespace ConsoleRPG
             backgroundRenderer = new Renderer(this, ' ', 5, new Color(145, 240, 255, 0.7f), true);
             collider = new Collider(this, OnCollision, true);
 
-
+            backgroundRenderer.backgroundStretches = true;
             //TEST
             InputHandler.AddListener(new KeyListener(ChangeOpacityUp, ConsoleKey.A));
             InputHandler.AddListener(new KeyListener(ChangeOpacityDown, ConsoleKey.S));

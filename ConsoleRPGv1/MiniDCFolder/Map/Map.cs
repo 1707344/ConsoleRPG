@@ -13,10 +13,14 @@ namespace ConsoleRPG
         public int height;
         public int width;
 
+        public List<(int x, int y, Renderer r)> emptySpaceWithColor;
+        public bool resetEmptySpace;
+
         bool testBool = false;
 
         public Map(int sizeX, int sizeY)
         {
+            emptySpaceWithColor = new List<(int x, int y, Renderer r)>();
             addingObjecsFuncs = new List<Func<bool>>();
             objects = new List<BaseObject>();
             renderers = new List<Renderer>();
@@ -46,7 +50,6 @@ namespace ConsoleRPG
             {
                 baseObject.Update();
             }
-
             //Destroys all baseObjects that have destroy set to true
             List<BaseObject> baseObjects = objects.FindAll(x => x.destroy);
             for(int i = 0; i < baseObjects.Count;i++)
@@ -63,12 +66,14 @@ namespace ConsoleRPG
 
         public void Display()
         {
+
+
             if (!testBool)
             {
                 testBool = true;
-                Color backgroundColor = new Color(Color.Colors.Black);
+                Color backgroundColor1 = new Color(Color.Colors.Black);
                 Color textColor = new Color(Color.Colors.White);
-                Console.Write("\x1b[48;2;" + backgroundColor.r + ";" + backgroundColor.g + ";" + backgroundColor.b + "m");
+                Console.Write("\x1b[48;2;" + backgroundColor1.r + ";" + backgroundColor1.g + ";" + backgroundColor1.b + "m");
                 Console.Write("\x1b[38;2;" + textColor.r + ";" + textColor.g + ";" + textColor.b + "m");
                 for (int x = 0; x < width * 3; x++)
                 {
@@ -81,9 +86,39 @@ namespace ConsoleRPG
             }
 
             UpdateObjects();
-            
+            bool test = true;
+            if (test)
+            {
+                //Cleaning up empty space
+                Color emptySpaceColor = new Color(Color.Colors.Black);
+                Console.Write("\x1b[48;2;" + emptySpaceColor.r + ";" + emptySpaceColor.g + ";" + emptySpaceColor.b + "m");
+                for (int x = 1; x < width*2; x+=2)
+                {
+                    for (int y = 0; y < height; y++)
+                    {
+                        if(!emptySpaceWithColor.Exists(e => e.x == x && e.y == y))
+                        {
+                            Console.SetCursorPosition(x, y);
+                            Console.Write(" ");
+                        }
+                        else if(emptySpaceWithColor.Exists(e => e.r.obj == null 
+                        || (e.x - 1 != e.r.obj.GetComponent<Position>().x || e.y != e.r.obj.GetComponent<Position>().y) 
+                        || e.r.isVisible == false))
+                        {
+                            emptySpaceWithColor.Remove(emptySpaceWithColor.Find(e => e.x == x && e.y == y));
+                        }
+                    }
+                }
+                
+                foreach ((int x, int y, Renderer r) pos in emptySpaceWithColor)
+                {
+                    //Console.SetCursorPosition(pos.x, pos.y);
+                    ////Console.Write(" ");
+                }
+            }
 
-            foreach(Position position in positions)
+
+            foreach (Position position in positions)
             {
 
                 //All of the backgrounds (in a position)

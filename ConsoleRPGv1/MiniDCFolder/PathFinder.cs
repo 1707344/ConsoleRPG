@@ -24,6 +24,11 @@ namespace ConsoleRPG
 
             while (visitedNodes.Count < 150)
             {
+                if(queue.Count <= 0)
+                {
+                    return Movement.Direction.None;
+                }
+
                 Node node = queue[0];
                 
 
