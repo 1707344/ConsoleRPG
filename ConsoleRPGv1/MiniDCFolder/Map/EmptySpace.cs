@@ -11,7 +11,7 @@ namespace ConsoleRPG
         public EmptySpace(Map map, int x, int y): base(map)
         {
             position = new Position(this, x, y);
-            renderer = new Renderer(this, '.', -1, new Color(Color.Colors.White), new Color(Color.Colors.Black));
+            renderer = new Renderer(this, '∙', -1, new Color(50, 50, 50), false);
         }
     }
 }

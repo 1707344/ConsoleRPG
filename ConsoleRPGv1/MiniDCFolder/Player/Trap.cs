@@ -9,6 +9,7 @@ namespace ConsoleRPG
     {
         Position position;
         Renderer renderer;
+        Renderer backgroundRenderer;
         Collider collider;
         int freezingTime;
         Thread enableThread;
@@ -16,15 +17,21 @@ namespace ConsoleRPG
         {
             freezingTime = 1500;
             position = new Position(this, x, y);
-            renderer = new Renderer(this, 'X', 0, new Color(145, 240, 255), new Color(Color.Colors.Black));
+            renderer = new Renderer(this, 'X', 2, new Color(145, 240, 255, 0.7f), false);
+            backgroundRenderer = new Renderer(this, ' ', 5, new Color(145, 240, 255, 0.7f), true);
             collider = new Collider(this, OnCollision, true);
+
+
+            //TEST
+            InputHandler.AddListener(new KeyListener(ChangeOpacityUp, ConsoleKey.A));
+            InputHandler.AddListener(new KeyListener(ChangeOpacityDown, ConsoleKey.S));
 
             collider.active = false;
             enableThread = new Thread(new ThreadStart(delegate ()
             {
-                renderer.backgroundColor = new Color(145, 240, 255);
+                //renderer.color = new Color(145, 240, 255);
                 Thread.Sleep(3000);
-                renderer.backgroundColor = new Color(Color.Colors.Black);
+                backgroundRenderer.isVisible = false;
                 collider.active = true;
             }));
             
@@ -46,8 +53,8 @@ namespace ConsoleRPG
                 baseObject.GetComponent<Movement>().stopMovement = true;
                 Thread thread = new Thread(new ThreadStart(delegate ()
                 {
-                    Color color = baseObject.GetComponent<Renderer>().textColor;
-                    baseObject.GetComponent<Renderer>().textColor = renderer.textColor;
+                    Color color = baseObject.GetComponent<Renderer>().color;
+                    baseObject.GetComponent<Renderer>().color = renderer.color;
 
                     collider.isTrigger = false;
 
@@ -62,7 +69,7 @@ namespace ConsoleRPG
 
                     collider.isTrigger = true;
                     
-                    baseObject.GetComponent<Renderer>().textColor = color;
+                    baseObject.GetComponent<Renderer>().color = color;
                     baseObject.GetComponent<Movement>().stopMovement = false;
                 }));
                 thread.Start();
@@ -70,6 +77,16 @@ namespace ConsoleRPG
             return true;
         }
 
-        
+        public bool ChangeOpacityUp()
+        {
+            renderer.color.a += 0.1f;
+            return true;
+        }
+        public bool ChangeOpacityDown()
+        {
+
+            renderer.color.a -= 0.1f;
+            return true;
+        }
     }
 }

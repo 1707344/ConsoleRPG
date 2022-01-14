@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
+using System.ComponentModel;
+using System.Windows;
 
 namespace ConsoleRPGv1
 {
@@ -15,35 +17,11 @@ namespace ConsoleRPGv1
         public static extern IntPtr GetStdHandle(int handle);
         //------------------------------
 
-
         static void Main(string[] args)
         {
             ActivateColors();
-            int width = 55;
-            int height = 20;
-            int b = 0;
             Console.CursorVisible = false;
-            int num = 255;
 
-            while (false)
-            {
-                b++;
-                Console.SetCursorPosition(0, 0);
-                for (int g = 0; g < num; g += num / height)
-                {
-                    for (int r = 0; r < num; r += num / width)
-                    {
-                        Console.Write("\x1b[48;2;" + r + ";" + g + ";" + b + "m");
-                        Console.Write("\x1b[38;2;" + (255-r) + ";" + (255-g) + ";" + (255-b) + "m");
-                        Console.Write("=");
-                    }
-                    Console.WriteLine();
-                }
-                if(b >= 255)
-                {
-                    b = 0;
-                }
-            }
             ConsoleRPG.MiniDC.PlayGame();
         }
 

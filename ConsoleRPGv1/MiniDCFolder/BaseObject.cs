@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Linq;
 
 namespace ConsoleRPG
 {
@@ -46,11 +47,30 @@ namespace ConsoleRPG
         /// <summary>
         /// Returns component T. <br></br>
         /// EX:
+        ///     obj.GetComponents&lt;Renderer&gt;(); 
+        ///     
+        ///     will return the renderer components on obj as a list
+        /// </summary>
+        public List<T> GetComponents<T>() where T: Component
+        {
+            List<Component> component = components.FindAll(x => x.GetType().Name == typeof(T).Name);
+            try
+            {
+                return component.Cast<T>().ToList();
+            }
+            catch
+            {
+                return null;
+            }
+        }
+        /// <summary>
+        /// Returns component T. <br></br>
+        /// EX:
         ///     obj.GetComponent&lt;Renderer&gt;(); 
         ///     
         ///     will return the renderer component on obj
         /// </summary>
-        public T GetComponent<T>() where T: Component
+        public T GetComponent<T>() where T : Component
         {
             Component component = components.Find(x => x.GetType().Name == typeof(T).Name);
             try

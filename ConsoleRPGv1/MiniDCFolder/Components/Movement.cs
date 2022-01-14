@@ -4,6 +4,9 @@ using System.Text;
 
 namespace ConsoleRPG
 {
+    /// <summary>
+    /// Movement class requires the object to have a Position component
+    /// </summary>
     public class Movement: Component
     {
         public bool stopMovement = false;

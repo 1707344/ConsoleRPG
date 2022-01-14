@@ -14,8 +14,8 @@ namespace ConsoleRPG
 
         public Player(Map map, int x, int y): base(map)
         {
-            health = new Health(this, 5);
-            renderer = new Renderer(this, '@', 3, new Color(92, 255, 133), new Color(Color.Colors.Black));
+            health = new Health(this, 5);//∙☺
+            renderer = new Renderer(this, '☼', 3, new Color(92, 255, 133, 0.99f), false);
             position = new Position(this, x, y);
             movement = new Movement(this);
             collider = new Collider(this, OnCollision);
