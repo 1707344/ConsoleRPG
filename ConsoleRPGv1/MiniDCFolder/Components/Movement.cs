@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace ConsoleRPG
 {
     /// <summary>
     /// Movement class requires the object to have a Position component
     /// </summary>
-    public class Movement: Component
+    public class Movement : Component
     {
         public bool stopMovement = false;
 
@@ -21,7 +19,7 @@ namespace ConsoleRPG
         }
 
 
-        public Movement(BaseObject obj): base(obj)
+        public Movement(BaseObject obj) : base(obj)
         {
 
         }
@@ -55,14 +53,14 @@ namespace ConsoleRPG
             Position position = obj.GetComponent<Position>();
             List<BaseObject> objects = obj.GetMap().GetObjectsAtPosition(position.x + dx, position.y + dy).ConvertAll(x => x.obj);
 
-            foreach(BaseObject baseObject in objects.FindAll(x => x.GetComponent<Collider>() != null))
+            foreach (BaseObject baseObject in objects.FindAll(x => x.GetComponent<Collider>() != null))
             {
                 baseObject.GetComponent<Collider>().Collision(obj);
             }
 
-            if(objects.Exists(x => x.GetComponent<Collider>() != null && !x.GetComponent<Collider>().isTrigger))
+            if (objects.Exists(x => x.GetComponent<Collider>() != null && !x.GetComponent<Collider>().isTrigger))
             {
-                
+
                 return;
             }
 

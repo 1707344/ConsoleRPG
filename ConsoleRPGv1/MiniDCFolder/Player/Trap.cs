@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading;
 
 namespace ConsoleRPG
 {
-    public class FreezingTrap: BaseObject
+    public class FreezingTrap : BaseObject
     {
         Position position;
         Renderer renderer;
@@ -13,7 +11,7 @@ namespace ConsoleRPG
         Collider collider;
         int freezingTime;
         Thread enableThread;
-        public FreezingTrap(Map map, int x, int y): base(map)
+        public FreezingTrap(Map map, int x, int y) : base(map)
         {
             freezingTime = 1500;
             position = new Position(this, x, y);
@@ -34,12 +32,12 @@ namespace ConsoleRPG
                 backgroundRenderer.isVisible = false;
                 collider.active = true;
             }));
-            
+
         }
 
         public override void Update()
         {
-            if(collider.active == false && enableThread.ThreadState == ThreadState.Unstarted)
+            if (collider.active == false && enableThread.ThreadState == ThreadState.Unstarted)
             {
                 enableThread.Start();
             }
@@ -47,9 +45,9 @@ namespace ConsoleRPG
 
         public bool OnCollision(BaseObject baseObject)
         {
-            if(baseObject.GetType().Name == "Player" || baseObject.GetType().Name == "Monster")
+            if (baseObject.GetType().Name == "Player" || baseObject.GetType().Name == "Monster")
             {
-                
+
                 baseObject.GetComponent<Movement>().stopMovement = true;
                 Thread thread = new Thread(new ThreadStart(delegate ()
                 {
@@ -58,17 +56,17 @@ namespace ConsoleRPG
 
                     collider.isTrigger = false;
 
-                    if(baseObject.GetType().Name == "Player") 
-                    { 
-                        Thread.Sleep(freezingTime/2); 
-                    } 
+                    if (baseObject.GetType().Name == "Player")
+                    {
+                        Thread.Sleep(freezingTime / 2);
+                    }
                     else
                     {
                         Thread.Sleep(freezingTime);
                     }
 
                     collider.isTrigger = true;
-                    
+
                     baseObject.GetComponent<Renderer>().color = color;
                     baseObject.GetComponent<Movement>().stopMovement = false;
                 }));

@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace ConsoleRPG
+﻿namespace ConsoleRPG
 {
-    public class Monster: BaseObject
+    public class Monster : BaseObject
     {
         Renderer renderer;
         Position position;
@@ -13,11 +9,11 @@ namespace ConsoleRPG
         Cooldown movementCooldown;
         Collider collider;
 
-        
-        public Monster(Map map, int x, int y): base(map)
+
+        public Monster(Map map, int x, int y) : base(map)
         {
             collider = new Collider(this, OnCollision);
-            
+
             renderer = new Renderer(this, '@', 2, new Color(255, 43, 43), false);
             position = new Position(this, x, y);
             movement = new Movement(this);

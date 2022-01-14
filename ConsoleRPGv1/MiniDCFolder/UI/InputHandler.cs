@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace ConsoleRPG
 {
@@ -10,13 +9,13 @@ namespace ConsoleRPG
     public static class InputHandler
     {
         static List<KeyListener> listeners = new List<KeyListener>();
-        
+
         public static void Update()
         {
             ConsoleKeyInfo key = Console.ReadKey(true);
-            foreach(KeyListener listener in listeners)
+            foreach (KeyListener listener in listeners)
             {
-                if(listener.key == key.Key)
+                if (listener.key == key.Key)
                 {
                     listener.func();
                 }

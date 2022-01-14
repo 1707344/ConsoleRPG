@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace ConsoleRPG
 {
-    public class Player: BaseObject
+    public class Player : BaseObject
     {
         Renderer renderer;
         Position position;
@@ -12,7 +10,7 @@ namespace ConsoleRPG
         Collider collider;
         Health health;
 
-        public Player(Map map, int x, int y): base(map)
+        public Player(Map map, int x, int y) : base(map)
         {
             health = new Health(this, 5);//∙☺
             renderer = new Renderer(this, '☼', 3, new Color(92, 255, 133, 0.99f), false);
@@ -26,10 +24,10 @@ namespace ConsoleRPG
             InputHandler.AddListener(new KeyListener(MoveLeft, ConsoleKey.LeftArrow));
             InputHandler.AddListener(new KeyListener(MoveRight, ConsoleKey.RightArrow));
         }
-        
+
         public bool OnCollision(BaseObject baseObject)
         {
-            if(baseObject.GetType().Name == "Monster")
+            if (baseObject.GetType().Name == "Monster")
             {
                 ConsoleHandler.StartFlashScreen(ConsoleColor.DarkRed, 5);
                 health.health--;
@@ -41,7 +39,7 @@ namespace ConsoleRPG
 
         void HealthCheck()
         {
-            if(health.health <= 0)
+            if (health.health <= 0)
             {
                 Console.Clear();
                 Console.WriteLine("You DIED \nPress any key to exit...");

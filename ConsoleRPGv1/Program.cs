@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Runtime.InteropServices;
-using System.ComponentModel;
-using System.Windows;
 
 namespace ConsoleRPGv1
 {

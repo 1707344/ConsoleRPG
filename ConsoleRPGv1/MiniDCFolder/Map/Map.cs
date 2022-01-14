@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace ConsoleRPG
 {
@@ -32,7 +31,7 @@ namespace ConsoleRPG
 
         void CreateBackground(int sizeX, int sizeY)
         {
-            for(int x = 0; x < sizeX; x++)
+            for (int x = 0; x < sizeX; x++)
             {
                 for (int y = 0; y < sizeY; y++)
                 {
@@ -46,18 +45,18 @@ namespace ConsoleRPG
         /// </summary>
         public void UpdateObjects()
         {
-            foreach(BaseObject baseObject in objects)
+            foreach (BaseObject baseObject in objects)
             {
                 baseObject.Update();
             }
             //Destroys all baseObjects that have destroy set to true
             List<BaseObject> baseObjects = objects.FindAll(x => x.destroy);
-            for(int i = 0; i < baseObjects.Count;i++)
+            for (int i = 0; i < baseObjects.Count; i++)
             {
                 baseObjects[i].Destroy();
             }
 
-            for(int i = 0; i < addingObjecsFuncs.Count; i++)
+            for (int i = 0; i < addingObjecsFuncs.Count; i++)
             {
                 addingObjecsFuncs[i]();
             }
@@ -92,24 +91,24 @@ namespace ConsoleRPG
                 //Cleaning up empty space
                 Color emptySpaceColor = new Color(Color.Colors.Black);
                 Console.Write("\x1b[48;2;" + emptySpaceColor.r + ";" + emptySpaceColor.g + ";" + emptySpaceColor.b + "m");
-                for (int x = 1; x < width*2; x+=2)
+                for (int x = 1; x < width * 2; x += 2)
                 {
                     for (int y = 0; y < height; y++)
                     {
-                        if(!emptySpaceWithColor.Exists(e => e.x == x && e.y == y))
+                        if (!emptySpaceWithColor.Exists(e => e.x == x && e.y == y))
                         {
                             Console.SetCursorPosition(x, y);
                             Console.Write(" ");
                         }
-                        else if(emptySpaceWithColor.Exists(e => e.r.obj == null 
-                        || (e.x - 1 != e.r.obj.GetComponent<Position>().x || e.y != e.r.obj.GetComponent<Position>().y) 
-                        || e.r.isVisible == false))
+                        else if (emptySpaceWithColor.Exists(e => e.r.obj == null
+                         || (e.x - 1 != e.r.obj.GetComponent<Position>().x || e.y != e.r.obj.GetComponent<Position>().y)
+                         || e.r.isVisible == false))
                         {
                             emptySpaceWithColor.Remove(emptySpaceWithColor.Find(e => e.x == x && e.y == y));
                         }
                     }
                 }
-                
+
                 foreach ((int x, int y, Renderer r) pos in emptySpaceWithColor)
                 {
                     //Console.SetCursorPosition(pos.x, pos.y);
@@ -131,7 +130,7 @@ namespace ConsoleRPG
                 List<Renderer> renderers = new List<Renderer>();
 
                 List<Renderer> backgroundsInFrontOfIcon = new List<Renderer>();
-                     
+
                 //Getting all renderers in position
                 foreach (Position position1 in matchingPositions.FindAll(x => x.obj.GetComponent<Renderer>() != null))
                 {
@@ -146,10 +145,11 @@ namespace ConsoleRPG
                 Renderer highestLayerIcon = null;
                 foreach (Renderer renderer in renderers.FindAll(x => !x.isBackground))
                 {
-                    if(highestLayerIcon == null)
+                    if (highestLayerIcon == null)
                     {
                         highestLayerIcon = renderer;
-                    }else if(renderer.layer > highestLayerIcon.layer)
+                    }
+                    else if (renderer.layer > highestLayerIcon.layer)
                     {
                         highestLayerIcon = renderer;
                     }
@@ -165,11 +165,11 @@ namespace ConsoleRPG
                 Color colorInFrontOfIcon = null;
                 foreach (Renderer renderer1 in backgroundsInFrontOfIcon)
                 {
-                    if(colorInFrontOfIcon == null)
+                    if (colorInFrontOfIcon == null)
                     {
                         colorInFrontOfIcon = renderer1.color;
                     }
-                    else if(colorInFrontOfIcon.a >= 1)
+                    else if (colorInFrontOfIcon.a >= 1)
                     {
                         break;
                     }
@@ -178,12 +178,12 @@ namespace ConsoleRPG
                         colorInFrontOfIcon = Color.ColorMixAdd(colorInFrontOfIcon, renderer1.color);
                     }
                 }
-                if(highestLayerIcon.color == null)
+                if (highestLayerIcon.color == null)
                 {
                     highestLayerIcon.color = new Color(0, 0, 0, 0);
                 }
 
-                if(colorInFrontOfIcon == null)
+                if (colorInFrontOfIcon == null)
                 {
                     colorInFrontOfIcon = new Color(0, 0, 0, 0);
                 }
@@ -209,7 +209,7 @@ namespace ConsoleRPG
                     }
                 }
                 backgroundColor = Color.ColorMixSub(new Color(Color.Colors.Black), backgroundColor);
-                 
+
                 //Display background and icon to the screen
                 Console.SetCursorPosition(position.x * 2, position.y);
                 if (backgrounds.Count > 0)
@@ -226,10 +226,10 @@ namespace ConsoleRPG
             switch (component.GetType().Name)
             {
                 case "Renderer":
-                    renderers.Add((Renderer) component);
+                    renderers.Add((Renderer)component);
                     break;
                 case "Position":
-                    positions.Add((Position) component);
+                    positions.Add((Position)component);
                     break;
             }
         }
@@ -243,14 +243,14 @@ namespace ConsoleRPG
                 case "Position":
                     positions.Remove((Position)component);
                     break;
-                    
+
             }
         }
         public List<Position> GetObjectsAtPosition(int posX, int posY)
         {
             return positions.FindAll(x => x.x == posX && x.y == posY);
         }
-        
+
 
         //For testing
         public void ResetBackgroundColors()

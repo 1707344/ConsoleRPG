@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading;
-using System.IO;
 
 namespace ConsoleRPG
 {
@@ -13,16 +10,16 @@ namespace ConsoleRPG
         static Map map;
         public static Time time;
         public static bool gamePlaying = true;
-        
+
 
         public static void PlayGame()
         {
             Console.CursorVisible = false;
             time = new Time();
-            
+
             Thread inputThread = new Thread(new ThreadStart(InputLoop));
             inputThread.Start();
-            
+
             map = TextFileToMap();
             ShowStartMenu();
 
@@ -91,10 +88,10 @@ namespace ConsoleRPG
             string[] text = new string[10];
             try
             {
-                
+
                 text = System.IO.File.ReadAllLines(@"..\..\..\Maps\Map1.txt");
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 Console.WriteLine(e.Message);
                 Environment.Exit(0);
@@ -107,7 +104,7 @@ namespace ConsoleRPG
             //Cell[,] cellMap = new Cell[text.Length, text[0].Length];
             Map map = new Map(charMap.GetLength(1), charMap.GetLength(0));
 
-           
+
 
 
             for (int x = 0; x < text[0].Length; x++)
@@ -124,9 +121,9 @@ namespace ConsoleRPG
             {
                 for (int j = 0; j < charMap.GetLength(0); j++)
                 {
-                    
 
-                    switch(charMap[j, i])
+
+                    switch (charMap[j, i])
                     {
                         case '#':
                             map.objects.Add(new Wall(map, i, j));

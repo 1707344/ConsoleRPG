@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace ConsoleRPG
+﻿namespace ConsoleRPG
 {
     /// <summary>
     /// Is a cooldown. Has a start and a check to see if the time is up.

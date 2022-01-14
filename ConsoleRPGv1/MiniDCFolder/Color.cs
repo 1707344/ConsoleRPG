@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ConsoleRPG
 {
@@ -10,8 +6,8 @@ namespace ConsoleRPG
     {
         public enum Colors
         {
-           White,
-           Black
+            White,
+            Black
         }
 
         public int r;
@@ -36,7 +32,7 @@ namespace ConsoleRPG
         {
 
         }
-        public Color(int r, int g, int b, float a=1)
+        public Color(int r, int g, int b, float a = 1)
         {
             SetColor(r, g, b, a);
         }
@@ -64,7 +60,7 @@ namespace ConsoleRPG
         public static Color ColorMixSub(Color a, Color b)
         {
 
-            if(b == null)
+            if (b == null)
             {
                 return a;
             }
@@ -78,7 +74,7 @@ namespace ConsoleRPG
 
             c = ColorInv(a);
             d = ColorInv(b);
-            
+
             f.r = Math.Max(0, 255 - c.r - d.r);
             f.g = Math.Max(0, 255 - c.g - d.g);
             f.b = Math.Max(0, 255 - c.b - d.b);
@@ -120,19 +116,20 @@ namespace ConsoleRPG
         {//((b.r * b.a / (float)mix.a) + (a.r * a.a * (1f - b.a) / (float)mix.a))
             Color mix = new Color();
 
-            if(b == null)
+            if (b == null)
             {
                 return a;
             }
 
-            if(a.a == 0 && b.a == 0)
+            if (a.a == 0 && b.a == 0)
             {
                 return new Color(0, 0, 0, 0);
             }
-            else if(a.a == 0)
+            else if (a.a == 0)
             {
                 return b;
-            }else if(b.a == 0)
+            }
+            else if (b.a == 0)
             {
                 return a;
             }

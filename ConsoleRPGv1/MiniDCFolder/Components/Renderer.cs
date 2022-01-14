@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace ConsoleRPG
 {
@@ -13,7 +11,7 @@ namespace ConsoleRPG
      * 
      */
     //
-    public class Renderer: Component
+    public class Renderer : Component
     {
         public Color color;
         char icon;
@@ -30,7 +28,7 @@ namespace ConsoleRPG
         /// </summary>
         public bool backgroundStretches = false;
 
-        public Renderer(BaseObject obj, char icon, int layer, Color color, bool isBackground): base(obj)
+        public Renderer(BaseObject obj, char icon, int layer, Color color, bool isBackground) : base(obj)
         {
             this.layer = layer;
             this.icon = icon;
@@ -38,7 +36,8 @@ namespace ConsoleRPG
             this.isBackground = isBackground;
         }
 
-        public void Display(Color alternateColor=null) {
+        public void Display(Color alternateColor = null)
+        {
             //ConsoleHandler.SetConsoleColor(textColor, backgroundColor);
 
             if (!isVisible)
@@ -63,7 +62,7 @@ namespace ConsoleRPG
                     //Console.Write(' ');
 
                     Console.SetCursorPosition(left, top);
-                    if(!obj.GetMap().emptySpaceWithColor.Exists(e => e.x + 1 == left && e.y == top))
+                    if (!obj.GetMap().emptySpaceWithColor.Exists(e => e.x + 1 == left && e.y == top))
                     {
                         obj.GetMap().emptySpaceWithColor.Add((left - 1, top, this));
                     }

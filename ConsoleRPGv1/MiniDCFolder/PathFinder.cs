@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace ConsoleRPG
 {
-    public class PathFinder: Component
+    public class PathFinder : Component
     {
         int furthestDistance;
 
-        public PathFinder(BaseObject obj, int distance): base(obj)
+        public PathFinder(BaseObject obj, int distance) : base(obj)
         {
             furthestDistance = distance;
         }
@@ -20,20 +19,20 @@ namespace ConsoleRPG
             Position position = obj.GetComponent<Position>();
             queue.Add(new Node(position.x, position.y, goal.x, goal.y, new List<Node>()));
 
-            
+
 
             while (visitedNodes.Count < 150)
             {
-                if(queue.Count <= 0)
+                if (queue.Count <= 0)
                 {
                     return Movement.Direction.None;
                 }
 
                 Node node = queue[0];
-                
+
 
                 //Check if node is goal
-                if(node.x == goal.x && node.y == goal.y)
+                if (node.x == goal.x && node.y == goal.y)
                 {
                     break;
                 }
@@ -53,13 +52,13 @@ namespace ConsoleRPG
                 visitedNodes.Add(node);
                 queue.Remove(node);
 
-                
+
 
                 //Sort nodes by total cost
 
                 queue.Sort(delegate (Node node1, Node node2)
                 {
-                    if(node1.totalCost == node2.totalCost)
+                    if (node1.totalCost == node2.totalCost)
                     {
                         return node1.previousNodes.Count.CompareTo(node2.previousNodes.Count);
                     }
@@ -72,7 +71,7 @@ namespace ConsoleRPG
 
             if (queue[0].previousNodes.Count <= 1)
             {
-                
+
                 finalNode = new Node(goal.x, goal.y, 0, 0, new List<Node>());
             }
             else
@@ -82,24 +81,24 @@ namespace ConsoleRPG
 
             if (queue[0].previousNodes.Count > furthestDistance || visitedNodes.Count == 150)
             {
-                
+
 
                 return Movement.Direction.None;
             }
 
-            if(finalNode.x > position.x)
+            if (finalNode.x > position.x)
             {
                 return Movement.Direction.East;
             }
-            if(finalNode.x < position.x)
+            if (finalNode.x < position.x)
             {
                 return Movement.Direction.West;
             }
-            if(finalNode.y < position.y)
+            if (finalNode.y < position.y)
             {
                 return Movement.Direction.North;
             }
-            if(finalNode.y > position.y)
+            if (finalNode.y > position.y)
             {
                 return Movement.Direction.South;
             }
@@ -111,11 +110,12 @@ namespace ConsoleRPG
         {
             List<Position> posAtPosition = obj.GetMap().GetObjectsAtPosition(node.x, node.y);
 
-            if ( !posAtPosition.Exists(x => x.obj.GetType().Name == "Player") 
+            if (!posAtPosition.Exists(x => x.obj.GetType().Name == "Player")
                 && posAtPosition.Exists(x => x.obj.GetComponent<Collider>() != null && !x.obj.GetComponent<Collider>().isTrigger)
                 || visited.Contains(node)
                 || queue.Exists(x => x.x == node.x && x.y == node.y)
-                ){
+                )
+            {
                 return;
             }
 
@@ -126,7 +126,7 @@ namespace ConsoleRPG
         }
     }
 
-    class Node 
+    class Node
     {
         public int x;
         public int y;

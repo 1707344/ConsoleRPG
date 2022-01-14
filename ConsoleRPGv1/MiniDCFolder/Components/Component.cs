@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace ConsoleRPG
+﻿namespace ConsoleRPG
 {
     /// <summary>
     /// Components will be attached to baseObjects. 

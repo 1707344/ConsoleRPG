@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace ConsoleRPG
 {
@@ -68,7 +67,7 @@ namespace ConsoleRPG
 
         static void DisplayStatusMenu()
         {
-            
+
             Player player = MiniDC.player;
             Console.WriteLine($"Health: {player.GetComponent<Health>().health}/{player.GetComponent<Health>().maxHealth}       ");
         }

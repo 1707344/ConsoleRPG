@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Threading;
 
 namespace ConsoleRPG
 {
@@ -21,7 +19,7 @@ namespace ConsoleRPG
             InputHandler.AddListener(new KeyListener(delegate () { buttonSelected--; return true; }, ConsoleKey.UpArrow));
             InputHandler.AddListener(new KeyListener(delegate () { buttonSelected++; return true; }, ConsoleKey.DownArrow));
             InputHandler.AddListener(new KeyListener(delegate () { EnterClicked(); return true; }, ConsoleKey.Spacebar));
-            
+
         }
         static void EnterClicked()
         {
@@ -46,17 +44,18 @@ namespace ConsoleRPG
                          "\n   ███████╗███████║╚██████╗██║  ██║██║     ███████╗" +
                          "\n   ╚══════╝╚══════╝ ╚═════╝╚═╝  ╚═╝╚═╝     ╚══════╝";
             Console.Write(title);
-            
 
-            if(buttonSelected < 0)
+
+            if (buttonSelected < 0)
             {
                 buttonSelected = buttons.Count - 1;
-            }else if(buttonSelected >= buttons.Count)
+            }
+            else if (buttonSelected >= buttons.Count)
             {
                 buttonSelected = 0;
             }
 
-            foreach(Button button in buttons)
+            foreach (Button button in buttons)
             {
                 button.isSelected = false;
             }

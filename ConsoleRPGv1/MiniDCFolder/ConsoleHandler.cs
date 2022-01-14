@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading;
 
 namespace ConsoleRPG
@@ -15,13 +13,13 @@ namespace ConsoleRPG
     {
         public static void SetConsoleColor(ConsoleColor textColor, ConsoleColor backgroundColor)
         {
-            if(textColor != Console.ForegroundColor)
+            if (textColor != Console.ForegroundColor)
             {
                 Console.ForegroundColor = textColor;
-                
+
             }
 
-            if(backgroundColor != Console.BackgroundColor)
+            if (backgroundColor != Console.BackgroundColor)
             {
                 Console.BackgroundColor = backgroundColor;
             }

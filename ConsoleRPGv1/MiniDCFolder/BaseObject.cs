@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 namespace ConsoleRPG
@@ -22,7 +20,7 @@ namespace ConsoleRPG
         {
             this.map = map;
             components = new List<Component>();
-            
+
         }
 
         /// <summary>
@@ -51,7 +49,7 @@ namespace ConsoleRPG
         ///     
         ///     will return the renderer components on obj as a list
         /// </summary>
-        public List<T> GetComponents<T>() where T: Component
+        public List<T> GetComponents<T>() where T : Component
         {
             List<Component> component = components.FindAll(x => x.GetType().Name == typeof(T).Name);
             try
