@@ -10,7 +10,7 @@ namespace ConsoleRPG
         static Map map;
         public static Time time;
         public static bool gamePlaying = true;
-
+        static int highestFrame;
 
         public static void PlayGame()
         {
@@ -60,6 +60,7 @@ namespace ConsoleRPG
                 Console.SetCursorPosition(0, 0);
 
                 map.Display();
+                ConsoleHandler.Display();
                 Console.WriteLine();
 
 
@@ -69,8 +70,10 @@ namespace ConsoleRPG
                 time.SetFrameEndTime();
                 time.SetDeltaTime();
 
+
                 Console.SetCursorPosition(60, 2);
                 Console.WriteLine(time.GetDeltaTime() + "            ");
+
             }
 
         }

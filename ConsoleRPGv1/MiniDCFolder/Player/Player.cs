@@ -50,6 +50,7 @@ namespace ConsoleRPG
 
         public bool MoveUp()
         {
+            ConsoleHandler.consoleCharacters[10, 10].text++;
             movement.Move(Movement.Direction.North);
             return true;
         }

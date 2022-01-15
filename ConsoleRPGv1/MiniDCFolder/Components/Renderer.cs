@@ -36,7 +36,7 @@ namespace ConsoleRPG
             this.isBackground = isBackground;
         }
 
-        public void Display(Color alternateColor = null)
+        public void Display(int x, int y, Color alternateColor = null)
         {
             //ConsoleHandler.SetConsoleColor(textColor, backgroundColor);
 
@@ -49,34 +49,31 @@ namespace ConsoleRPG
 
             if (isBackground)
             {
-                Console.Write("\x1b[48;2;" + outputColor.r + ";" + outputColor.g + ";" + outputColor.b + "m");
+                ConsoleHandler.consoleCharacters[x, y].backgroundColor = outputColor;
 
                 if (backgroundStretches)
                 {
-                    int left = Console.GetCursorPosition().Left;
-                    int top = Console.GetCursorPosition().Top;
 
-                    Console.SetCursorPosition(left - 1, top);
-                    Console.Write(' ');
-                    //Console.SetCursorPosition(left + 1, top);
-                    //Console.Write(' ');
+                    ConsoleCharacter leftConsoleCharacter = ConsoleHandler.consoleCharacters[x - 1, y];
 
-                    Console.SetCursorPosition(left, top);
-                    if (!obj.GetMap().emptySpaceWithColor.Exists(e => e.x + 1 == left && e.y == top))
+                    leftConsoleCharacter.backgroundColor = outputColor;
+
+
+                    if (!obj.GetMap().emptySpaceWithColor.Exists(e => e.x + 1 == x && e.y == y))
                     {
-                        obj.GetMap().emptySpaceWithColor.Add((left - 1, top, this));
+                        //obj.GetMap().emptySpaceWithColor.Add((left - 1, top, this));
                     }
 
                     //obj.GetMap().emptySpaceReset.Add((left + 1, top));
 
                     Color black = new Color(Color.Colors.Black);
-                    Console.Write("\x1b[48;2;" + black.r + ";" + black.g + ";" + black.b + "m");
+                    //ConsoleHandler.consoleCharacters[]
                 }
             }
             else
             {
-                Console.Write("\x1b[38;2;" + outputColor.r + ";" + outputColor.g + ";" + outputColor.b + "m");
-                Console.Write(icon);
+                ConsoleHandler.consoleCharacters[x, y].text = icon;
+                ConsoleHandler.consoleCharacters[x, y].textColor = outputColor;
 
 
             }

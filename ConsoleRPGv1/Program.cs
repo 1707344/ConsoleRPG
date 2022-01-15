@@ -22,6 +22,8 @@ namespace ConsoleRPGv1
             ActivateColors();
             Console.CursorVisible = false;
 
+
+
             ConsoleRPG.MiniDC.PlayGame();
         }
 
@@ -34,4 +36,5 @@ namespace ConsoleRPGv1
             SetConsoleMode(handle, mode | 0x4);
         }
     }
+
 }

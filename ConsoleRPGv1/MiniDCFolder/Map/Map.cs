@@ -65,27 +65,27 @@ namespace ConsoleRPG
 
         public void Display()
         {
-
+            ConsoleHandler.ClearConsoleCharacters();
 
             if (!testBool)
             {
                 testBool = true;
                 Color backgroundColor1 = new Color(Color.Colors.Black);
                 Color textColor = new Color(Color.Colors.White);
-                Console.Write("\x1b[48;2;" + backgroundColor1.r + ";" + backgroundColor1.g + ";" + backgroundColor1.b + "m");
-                Console.Write("\x1b[38;2;" + textColor.r + ";" + textColor.g + ";" + textColor.b + "m");
+                //Console.Write("\x1b[48;2;" + backgroundColor1.r + ";" + backgroundColor1.g + ";" + backgroundColor1.b + "m");
+                //Console.Write("\x1b[38;2;" + textColor.r + ";" + textColor.g + ";" + textColor.b + "m");
                 for (int x = 0; x < width * 3; x++)
                 {
                     for (int y = 0; y < height; y++)
                     {
-                        Console.SetCursorPosition(x, y);
+                        //Console.SetCursorPosition(x, y);
                         //Console.Write("░");
                     }
                 }
             }
 
             UpdateObjects();
-            bool test = true;
+            /*bool test = true;
             if (test)
             {
                 //Cleaning up empty space
@@ -114,7 +114,7 @@ namespace ConsoleRPG
                     //Console.SetCursorPosition(pos.x, pos.y);
                     ////Console.Write(" ");
                 }
-            }
+            }*/
 
 
             foreach (Position position in positions)
@@ -208,15 +208,18 @@ namespace ConsoleRPG
                         backgroundColor = Color.ColorMixAdd(backgroundColor, background.color);
                     }
                 }
+                Random random = new Random(DateTime.Now.Millisecond);
+
                 backgroundColor = Color.ColorMixSub(new Color(Color.Colors.Black), backgroundColor);
 
+                //newIconColor = new Color(random.Next(0, 255), random.Next(0, 255), random.Next(0, 255));
+
                 //Display background and icon to the screen
-                Console.SetCursorPosition(position.x * 2, position.y);
                 if (backgrounds.Count > 0)
                 {
-                    backgrounds[0].Display(backgroundColor);
+                    backgrounds[0].Display(position.x * 2, position.y, backgroundColor);
                 }
-                highestLayerIcon.Display(newIconColor);
+                highestLayerIcon.Display(position.x * 2, position.y, newIconColor);
 
             }
         }
