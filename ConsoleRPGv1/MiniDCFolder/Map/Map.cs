@@ -47,6 +47,8 @@ namespace ConsoleRPG
         /// </summary>
         public void UpdateObjects()
         {
+            ExplosionHandler.Update();
+
             foreach (BaseObject baseObject in objects)
             {
                 baseObject.Update();

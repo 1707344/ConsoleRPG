@@ -6,34 +6,39 @@ using System.Threading.Tasks;
 
 namespace ConsoleRPG
 {
-    class ExplosionSource: BaseObject
+    public static class ExplosionHandler
     {
-        List<ExplosionCell> explosionCells;
-        List<ExplosionCell> newExplosionCells;
-        Position position;
-        Movement movement;
+        static List<ExplosionCell> explosionCells;
+        static List<ExplosionCell> newExplosionCells;
+        //Position position;
+        //Movement movement;
 
-        public float transferSpeed;
-        public float decaySpeed;
-        public ExplosionSource(Map map, int x, int y) : base(map)
+        public static float transferSpeed;
+        public static float decaySpeed;
+        static ExplosionHandler()
         {
             explosionCells = new List<ExplosionCell>();
             newExplosionCells = new List<ExplosionCell>();
-            position = new Position(this, x, y);
-            movement = new Movement(this);
+            //position = new Position(this, x, y);
+            //movement = new Movement(this);
 
 
-            newExplosionCells.Add(new ExplosionCell(map, x, y, 0.5f, 0.05f, 50));
+            //newExplosionCells.Add(new ExplosionCell(map, x, y, 0.5f, 0.05f, 50));
         }
 
-        public override void Update()
+        public static void SpawnNewExplosion(Map map, int x, int y, float transferSpeed, float decaySpeed, float startEnergy)
+        {
+            newExplosionCells.Add(new ExplosionCell(map, x, y, transferSpeed, decaySpeed, startEnergy));
+        }
+
+        public static void Update()
         {
             
 
             if (Player.test)
             {
                 Player.turnOffTest = true;
-                newExplosionCells.Add(new ExplosionCell(GetMap(), position.x, position.y, 0.5f, 0.05f, 10));
+                //newExplosionCells.Add(new ExplosionCell(GetMap(), position.x, position.y, 0.5f, 0.05f, 10));
             }
             else
             {
@@ -83,7 +88,7 @@ namespace ConsoleRPG
 
             }
 
-
+            //Apply decay and remove dead explosion cells
             List<ExplosionCell> destroyedExplosionCells = new List<ExplosionCell>();
             foreach (ExplosionCell explosionCell in explosionCells)
             {
@@ -94,20 +99,27 @@ namespace ConsoleRPG
                     destroyedExplosionCells.Add(explosionCell);
                 }
             }
-
             foreach (ExplosionCell explosionCell in destroyedExplosionCells)
             {
                 explosionCells.Remove(explosionCell);
             }
 
+            //Apply color
             foreach (ExplosionCell explosionCell in explosionCells)
             {
                 explosionCell.renderer.color = explosionCell.GetColor();
             }
 
+
+            //Add damage
+            foreach (ExplosionCell explosion in explosionCells)
+            {
+                explosion.ApplyDamage();
+            }
+
             if (explosionCells.Count == 0 && newExplosionCells.Count == 0)
             {
-                destroy = true;
+                //destroy = true;
             }
         }
 
@@ -221,6 +233,18 @@ namespace ConsoleRPG
             }
 
             return null;
+        }
+        /// <summary>
+        /// Hurts anything with the health component in the same position. 
+        /// The more energy the more damage
+        /// </summary>
+        public void ApplyDamage()
+        {
+            List<Health> healths = GetMap().GetObjectsAtPosition(position.x, position.y).FindAll(x => x.obj.GetComponent<Health>() != null).ConvertAll(x => x.obj.GetComponent<Health>());
+            foreach(Health health in healths)
+            {
+                health.health -= energy/10;
+            }
         }
     }
 }

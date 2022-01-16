@@ -22,6 +22,7 @@ namespace ConsoleRPGv1
             ActivateColors();
             Console.CursorVisible = false;
 
+            Console.Write("\x1b[48;2;" + 0 + ";" + 0 + ";" + 0 + "m");
 
 
             ConsoleRPG.MiniDC.PlayGame();

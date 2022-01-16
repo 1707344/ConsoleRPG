@@ -11,6 +11,7 @@ namespace ConsoleRPG
         public static Time time;
         public static bool gamePlaying = true;
         static int highestFrame;
+        static bool inputLoop;
 
         public static void PlayGame()
         {
@@ -20,7 +21,7 @@ namespace ConsoleRPG
             Thread inputThread = new Thread(new ThreadStart(InputLoop));
             inputThread.Start();
 
-            map = TextFileToMap();
+            map = TextFileToMap("Map1.txt");
             ShowStartMenu();
 
 
@@ -86,13 +87,13 @@ namespace ConsoleRPG
             }
         }
 
-        static Map TextFileToMap()
+        static Map TextFileToMap(string mapName)
         {
             string[] text = new string[10];
             try
             {
 
-                text = System.IO.File.ReadAllLines(@"..\..\..\Maps\Map1.txt");
+                text = System.IO.File.ReadAllLines(@"..\..\..\Maps\"+mapName);
             }
             catch (Exception e)
             {
@@ -143,9 +144,6 @@ namespace ConsoleRPG
                             break;
                         case 'S':
                             new Stairs(map, i, j);
-                            break;
-                        case 'E':
-                            new ExplosionSource(map, i, j);
                             break;
                         default:
                             //objectInsideCell = null;

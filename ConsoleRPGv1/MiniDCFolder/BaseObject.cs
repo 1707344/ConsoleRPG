@@ -34,7 +34,10 @@ namespace ConsoleRPG
 
         public virtual void Update()
         {
-
+            foreach (Component component in components)
+            {
+                component.Update();
+            }
         }
 
         public void Destroy()
