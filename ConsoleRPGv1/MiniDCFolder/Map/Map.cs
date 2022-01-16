@@ -6,6 +6,7 @@ namespace ConsoleRPG
     public class Map
     {
         public List<BaseObject> objects;
+        public List<BaseObject> newObjects;
         List<Renderer> renderers;
         List<Position> positions;
         public List<Func<bool>> addingObjecsFuncs;
@@ -22,6 +23,7 @@ namespace ConsoleRPG
             emptySpaceWithColor = new List<(int x, int y, Renderer r)>();
             addingObjecsFuncs = new List<Func<bool>>();
             objects = new List<BaseObject>();
+            newObjects = new List<BaseObject>();
             renderers = new List<Renderer>();
             positions = new List<Position>();
             height = sizeY;
@@ -49,6 +51,19 @@ namespace ConsoleRPG
             {
                 baseObject.Update();
             }
+
+            foreach (BaseObject newObject in newObjects)
+            {
+                objects.Add(newObject);
+            }
+            newObjects.Clear();
+
+            if (Player.turnOffTest)
+            {
+                Player.test = false;
+                Player.turnOffTest = false;
+            }
+
             //Destroys all baseObjects that have destroy set to true
             List<BaseObject> baseObjects = objects.FindAll(x => x.destroy);
             for (int i = 0; i < baseObjects.Count; i++)

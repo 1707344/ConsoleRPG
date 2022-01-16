@@ -129,21 +129,23 @@ namespace ConsoleRPG
                     switch (charMap[j, i])
                     {
                         case '#':
-                            map.objects.Add(new Wall(map, i, j));
+                            new Wall(map, i, j);
                             break;
                         case 'F':
-                            map.objects.Add(new FreezingTrap(map, i, j));
+                            new FreezingTrap(map, i, j);
                             break;
                         case 'M':
-                            map.objects.Add(new Monster(map, i, j));
+                            new Monster(map, i, j);
                             EndScreen.startingNumMonsters++;
                             break;
                         case 'P':
                             player = new Player(map, i, j);
-                            map.objects.Add(player);
                             break;
                         case 'S':
-                            map.objects.Add(new Stairs(map, i, j));
+                            new Stairs(map, i, j);
+                            break;
+                        case 'E':
+                            new ExplosionSource(map, i, j);
                             break;
                         default:
                             //objectInsideCell = null;

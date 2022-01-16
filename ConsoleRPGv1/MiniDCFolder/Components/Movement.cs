@@ -60,7 +60,11 @@ namespace ConsoleRPG
 
             if (objects.Exists(x => x.GetComponent<Collider>() != null && !x.GetComponent<Collider>().isTrigger))
             {
-
+                Collider collider = obj.GetComponent<Collider>();
+                if (collider != null)
+                {
+                    collider.Collision(objects.Find(x => x.GetComponent<Collider>() != null && !x.GetComponent<Collider>().isTrigger));
+                }
                 return;
             }
 

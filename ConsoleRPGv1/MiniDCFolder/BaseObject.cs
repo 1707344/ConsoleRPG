@@ -20,7 +20,7 @@ namespace ConsoleRPG
         {
             this.map = map;
             components = new List<Component>();
-
+            map.newObjects.Add(this);
         }
 
         /// <summary>
