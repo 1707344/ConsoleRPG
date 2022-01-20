@@ -1,17 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace ConsoleRPG
+﻿namespace ConsoleRPG
 {
-    class AimingIndicator: BaseObject
+    class AimingIndicator : BaseObject
     {
         Renderer renderer;
         public Position position;
         public Movement.Direction direction;
-        public AimingIndicator(Map map, int x, int y, Movement.Direction direction): base(map)
+        public AimingIndicator(Map map, int x, int y, Movement.Direction direction) : base(map)
         {
             switch (direction)
             {

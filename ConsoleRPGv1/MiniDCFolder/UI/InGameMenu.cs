@@ -81,10 +81,10 @@ namespace ConsoleRPG
             {
                 float r1 = 0;//Low end of gradient
                 float r2 = 255;//High end of gradient
-                float r4 = 1 - (health.health/health.maxHealth);//0-1 how far the gradient is translated
-                float t = (float)i/(float)healthBarSize;//0-1 which part of gradient
+                float r4 = 1 - (health.health / health.maxHealth);//0-1 how far the gradient is translated
+                float t = (float)i / (float)healthBarSize;//0-1 which part of gradient
                 float r3 = 3;//How steep the gradient is
-                float r = (r1 + -(float)Math.Pow((t + r4), r3)) * (r2-r1) + r2;
+                float r = (r1 + -(float)Math.Pow((t + r4), r3)) * (r2 - r1) + r2;
 
                 Console.Write("\x1b[48;2;" + (int)r + ";" + 0 + ";" + 0 + "m");
                 Console.Write(" ");

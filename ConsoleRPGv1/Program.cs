@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
-namespace ConsoleRPGv1
+namespace ConsoleRPG
 {
     class Program
     {
@@ -16,9 +16,9 @@ namespace ConsoleRPGv1
         [DllImport("kernel32.dll", SetLastError = true)]
         public static extern IntPtr GetStdHandle(int handle);
         //------------------------------
-
         static void Main(string[] args)
         {
+
             ActivateColors();
             Console.CursorVisible = false;
 

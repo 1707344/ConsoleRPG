@@ -68,7 +68,8 @@ namespace ConsoleRPG
             {
                 isExploding = true;
                 PrepareToExplode();
-            }else if (movementCooldown.IsCooldownDone())
+            }
+            else if (movementCooldown.IsCooldownDone())
             {
                 movementCooldown.StartCooldown();
                 movement.Move(pathFinder.GetNextMove(MiniDC.player.GetComponent<Position>()));

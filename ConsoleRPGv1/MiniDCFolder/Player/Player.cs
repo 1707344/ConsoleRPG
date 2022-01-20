@@ -43,28 +43,36 @@ namespace ConsoleRPG
             collider = new Collider(this, OnCollision);
             fireballAimFlashCooldown = new Cooldown(100);
 
+            GetMap().addingObjecsFuncs.Add(SpawnIndicator);
 
-
-            InputHandler.AddListener(new KeyListener(MoveUp, ConsoleKey.UpArrow));
-            InputHandler.AddListener(new KeyListener(MoveDown, ConsoleKey.DownArrow));
-            InputHandler.AddListener(new KeyListener(MoveLeft, ConsoleKey.LeftArrow));
-            InputHandler.AddListener(new KeyListener(MoveRight, ConsoleKey.RightArrow));
-            InputHandler.AddListener(new KeyListener(ShootFireball, ConsoleKey.F));
-            InputHandler.AddListener(new KeyListener(UnSelectSpell, ConsoleKey.Spacebar));
-            InputHandler.AddListener(new KeyListener(Test, ConsoleKey.B));
+            //InputHandler.AddListener(new KeyListener(Test, ConsoleKey.B));
         }
 
+        public void LoadInput()
+        {
+            InputHandler.AddListener(new KeyListener(MoveUp, ConsoleKey.W));
+            InputHandler.AddListener(new KeyListener(MoveDown, ConsoleKey.S));
+            InputHandler.AddListener(new KeyListener(MoveLeft, ConsoleKey.A));
+            InputHandler.AddListener(new KeyListener(MoveRight, ConsoleKey.D));
+            InputHandler.AddListener(new KeyListener(AimUp, ConsoleKey.UpArrow));
+            InputHandler.AddListener(new KeyListener(AimDown, ConsoleKey.DownArrow));
+            InputHandler.AddListener(new KeyListener(AimLeft, ConsoleKey.LeftArrow));
+            InputHandler.AddListener(new KeyListener(AimRight, ConsoleKey.RightArrow));
+            //InputHandler.AddListener(new KeyListener(ShootFireball, ConsoleKey.F));
+            InputHandler.AddListener(new KeyListener(ShootFireball, ConsoleKey.Spacebar));
+
+        }
 
         public override void Update()
         {
             base.Update();
-            if(fireballAim && fireballAimFlashCooldown.IsCooldownDone())
+            if (fireballAim && fireballAimFlashCooldown.IsCooldownDone())
             {
                 fireballAimFlashCooldown.StartCooldown();
                 fireballAimSwitch = !fireballAimSwitch;
                 renderer.color = fireballAimSwitch ? fireballAimFlashColor1 : fireballAimFlashColor2;
             }
-            else if(!fireballAim)
+            else if (!fireballAim)
             {
                 renderer.color = baseColor;
             }
@@ -72,7 +80,7 @@ namespace ConsoleRPG
 
         public bool Test()
         {
-            if(testStrength > 20)
+            if (testStrength > 20)
             {
                 testStrength = 20;
             }
@@ -112,18 +120,45 @@ namespace ConsoleRPG
             }
         }
 
-
+        public bool AimUp()
+        {
+            aimingIndicator.SetPosition(position.x, position.y - 1);
+            aimingIndicator.direction = Movement.Direction.North;
+            return true;
+        }
+        public bool AimDown()
+        {
+            aimingIndicator.SetPosition(position.x, position.y + 1);
+            aimingIndicator.direction = Movement.Direction.South;
+            return true;
+        }
+        public bool AimLeft()
+        {
+            aimingIndicator.SetPosition(position.x - 1, position.y);
+            aimingIndicator.direction = Movement.Direction.West;
+            return true;
+        }
+        public bool AimRight()
+        {
+            aimingIndicator.SetPosition(position.x + 1, position.y);
+            aimingIndicator.direction = Movement.Direction.East;
+            return true;
+        }
 
         public bool MoveUp()
         {
             if (fireballAim)
             {
-                aimingIndicator.SetPosition(position.x, position.y - 1);
-                aimingIndicator.direction = Movement.Direction.North;
+                //aimingIndicator.SetPosition(position.x, position.y - 1);
+                //aimingIndicator.direction = Movement.Direction.North;
             }
             else
             {
-                movement.Move(Movement.Direction.North);
+
+            }
+            if (movement.Move(Movement.Direction.North))
+            {
+                aimingIndicator.position.y -= 1;
             }
             direction = Movement.Direction.North;
 
@@ -133,15 +168,18 @@ namespace ConsoleRPG
         {
             if (fireballAim)
             {
-                aimingIndicator.SetPosition(position.x, position.y + 1);
-                aimingIndicator.direction = Movement.Direction.South;
+                //aimingIndicator.SetPosition(position.x, position.y + 1);
+                //aimingIndicator.direction = Movement.Direction.South;
 
             }
             else
             {
-                movement.Move(Movement.Direction.South);
-            }
 
+            }
+            if (movement.Move(Movement.Direction.South))
+            {
+                aimingIndicator.position.y += 1;
+            }
             direction = Movement.Direction.South;
             return true;
         }
@@ -149,15 +187,18 @@ namespace ConsoleRPG
         {
             if (fireballAim)
             {
-                aimingIndicator.SetPosition(position.x - 1, position.y);
-                aimingIndicator.direction = Movement.Direction.West;
+                //aimingIndicator.SetPosition(position.x - 1, position.y);
+                //aimingIndicator.direction = Movement.Direction.West;
 
             }
             else
             {
-                movement.Move(Movement.Direction.West);
-            }
 
+            }
+            if (movement.Move(Movement.Direction.West))
+            {
+                aimingIndicator.position.x -= 1;
+            }
             direction = Movement.Direction.West;
             return true;
         }
@@ -165,26 +206,29 @@ namespace ConsoleRPG
         {
             if (fireballAim)
             {
-                aimingIndicator.SetPosition(position.x + 1, position.y);
-                aimingIndicator.direction = Movement.Direction.East;
+                //aimingIndicator.SetPosition(position.x + 1, position.y);
+                //aimingIndicator.direction = Movement.Direction.East;
 
             }
             else
             {
-                movement.Move(Movement.Direction.East);
-            }
 
+            }
+            if (movement.Move(Movement.Direction.East))
+            {
+                aimingIndicator.position.x += 1;
+            }
             direction = Movement.Direction.East;
             return true;
         }
         public bool UnSelectSpell()
         {
-            if(aimingIndicator == null)
+            if (aimingIndicator == null)
             {
                 return true;
             }
             fireballAim = false;
-            
+
             aimingIndicator.destroy = true;
             return true;
         }
@@ -193,19 +237,21 @@ namespace ConsoleRPG
         {
             if (!fireballAim)
             {
-                fireballAim = true;
-                GetMap().addingObjecsFuncs.Add(SpawnIndicator);
+                //fireballAim = true;
+
 
             }
             else
             {
-                fireballAim = false;
-                aimingIndicator.destroy = true;
-                if(!GetMap().GetObjectsAtPosition(aimingIndicator.position.x, aimingIndicator.position.y).Exists(x => x.obj.GetType() == typeof(Wall)))
-                {
-                    GetMap().addingObjecsFuncs.Add(SpawnFireball);
-                }
-                
+                //fireballAim = false;
+                //aimingIndicator.destroy = true;
+
+
+            }
+
+            if (!GetMap().GetObjectsAtPosition(aimingIndicator.position.x, aimingIndicator.position.y).Exists(x => x.obj.GetType() == typeof(Wall)))
+            {
+                GetMap().addingObjecsFuncs.Add(SpawnFireball);
             }
             return true;
         }

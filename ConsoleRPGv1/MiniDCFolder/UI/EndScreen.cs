@@ -29,6 +29,8 @@ namespace ConsoleRPG
                     Console.WriteLine("Achievment: Pacifist\nYou killed NO monsters");
                     break;
             }
+
+            Console.ReadKey();
         }
     }
 }

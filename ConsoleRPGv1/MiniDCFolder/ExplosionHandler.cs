@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ConsoleRPG
 {
@@ -33,7 +30,7 @@ namespace ConsoleRPG
 
         public static void Update()
         {
-            
+
 
             if (Player.test)
             {
@@ -45,7 +42,7 @@ namespace ConsoleRPG
                 //return;
             }
 
-            foreach(ExplosionCell explosionCell in newExplosionCells)
+            foreach (ExplosionCell explosionCell in newExplosionCells)
             {
                 explosionCells.Add(explosionCell);
             }
@@ -61,15 +58,15 @@ namespace ConsoleRPG
                 ExplosionCell dNewExplosionCell = explosionCell.CalculateDirection((1, 0));
                 explosionCell.energy -= explosionCell.energyLost;
 
-                if(aNewExplosionCell != null 
+                if (aNewExplosionCell != null
                     && !newExplosionCells.Exists(x => aNewExplosionCell.position.x == x.position.x && aNewExplosionCell.position.y == x.position.y)
-                    && !explosionCells.Exists(x => aNewExplosionCell.position.x == x.position.x && aNewExplosionCell.position.y == x.position.y ))
+                    && !explosionCells.Exists(x => aNewExplosionCell.position.x == x.position.x && aNewExplosionCell.position.y == x.position.y))
                 {
                     newExplosionCells.Add(aNewExplosionCell);
                 }
                 if (bNewExplosionCell != null
-                    && !newExplosionCells.Exists(x => bNewExplosionCell.position.x == x.position.x && bNewExplosionCell.position.y == x.position.y )
-                    && !explosionCells.Exists(x => bNewExplosionCell.position.x == x.position.x && bNewExplosionCell.position.y == x.position.y ))
+                    && !newExplosionCells.Exists(x => bNewExplosionCell.position.x == x.position.x && bNewExplosionCell.position.y == x.position.y)
+                    && !explosionCells.Exists(x => bNewExplosionCell.position.x == x.position.x && bNewExplosionCell.position.y == x.position.y))
                 {
                     newExplosionCells.Add(bNewExplosionCell);
                 }
@@ -93,7 +90,7 @@ namespace ConsoleRPG
             foreach (ExplosionCell explosionCell in explosionCells)
             {
                 explosionCell.energy -= explosionCell.decaySpeed;
-                if(explosionCell.energy <= 0)
+                if (explosionCell.energy <= 0)
                 {
                     explosionCell.destroy = true;
                     destroyedExplosionCells.Add(explosionCell);
@@ -126,10 +123,10 @@ namespace ConsoleRPG
         /// <summary>
         /// Calculates for one direction
         /// </summary>
-        
+
     }
 
-    class ExplosionCell: BaseObject
+    class ExplosionCell : BaseObject
     {
         public Renderer renderer;
         public Position position;
@@ -141,7 +138,7 @@ namespace ConsoleRPG
 
         public float energyLost = 0;
 
-        public ExplosionCell(Map map, int x, int y, float transferSpeed, float decaySpeed, float startEnergy=0) : base(map)
+        public ExplosionCell(Map map, int x, int y, float transferSpeed, float decaySpeed, float startEnergy = 0) : base(map)
         {
             renderer = new Renderer(this, ' ', 5, new Color(Color.Colors.White), true);
             position = new Position(this, x, y);
@@ -158,13 +155,16 @@ namespace ConsoleRPG
             if (north)
             {
                 numOfWallsAround++;
-            }if (south)
+            }
+            if (south)
             {
                 numOfWallsAround++;
-            }if (west)
+            }
+            if (west)
             {
                 numOfWallsAround++;
-            }if (east)
+            }
+            if (east)
             {
                 numOfWallsAround++;
             }
@@ -175,7 +175,7 @@ namespace ConsoleRPG
         {
             float g = 100 + (energy / 10) * (255 - 100);
             float a = 0.4f + (energy / 5) * (0.99f);
-            if(a >= 1)
+            if (a >= 1)
             {
                 a = 0.99f;
             }
@@ -195,7 +195,8 @@ namespace ConsoleRPG
             if (!(energy - actualTransferSpeed * (4 - numOfWallsAround) >= 0) && numOfWallsAround != 4)
             {
                 actualTransferSpeed = energy / (4 - numOfWallsAround);
-            }else if(actualTransferSpeed < transferSpeed)
+            }
+            else if (actualTransferSpeed < transferSpeed)
             {
                 actualTransferSpeed = transferSpeed;
             }
@@ -208,7 +209,7 @@ namespace ConsoleRPG
             if (affectedCell == null)
             {
                 if (!GetMap().GetObjectsAtPosition(position.x + direction.x, position.y + direction.y).Exists(x => x.obj.GetType() == typeof(Wall))
-                    && (energy - (transferSpeed/2) * (4 - numOfWallsAround) >= 0)
+                    && (energy - (transferSpeed / 2) * (4 - numOfWallsAround) >= 0)
 )
                 {                    //
 
@@ -227,9 +228,9 @@ namespace ConsoleRPG
                     }
                 }
             }
-            if(energy > 3)
+            if (energy > 3)
             {
-                int x = 1+1;
+                int x = 1 + 1;
             }
 
             return null;
@@ -241,9 +242,9 @@ namespace ConsoleRPG
         public void ApplyDamage()
         {
             List<Health> healths = GetMap().GetObjectsAtPosition(position.x, position.y).FindAll(x => x.obj.GetComponent<Health>() != null).ConvertAll(x => x.obj.GetComponent<Health>());
-            foreach(Health health in healths)
+            foreach (Health health in healths)
             {
-                health.health -= energy/10;
+                health.health -= energy / 10;
             }
         }
     }

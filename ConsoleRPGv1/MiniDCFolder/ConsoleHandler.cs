@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Threading;
 using System.Collections.Generic;
+using System.Threading;
 
 namespace ConsoleRPG
 {
@@ -15,7 +15,7 @@ namespace ConsoleRPG
         /// <summary>
         /// Holds everything that will be outputted to the console
         /// </summary>
-        public static ConsoleCharacter[,] consoleCharacters = new ConsoleCharacter[50,50];
+        public static ConsoleCharacter[,] consoleCharacters = new ConsoleCharacter[50, 50];
         /// <summary>
         /// The ConsoleCharacters that are actually displayed on the screen
         /// </summary>
@@ -71,15 +71,15 @@ namespace ConsoleRPG
         public static void Display()
         {
             //Finding all positions that need to be updated
-            List<(int x, int y)> needsToBeUpdated = new List<(int x, int y)>();   
+            List<(int x, int y)> needsToBeUpdated = new List<(int x, int y)>();
             for (int x = 0; x < consoleCharacters.GetLength(0); x++)
             {
                 for (int y = 0; y < consoleCharacters.GetLength(1); y++)
                 {
-                    if(consoleCharacters[x, y].IsDifferent(activeCharacters[x, y]))
+                    if (consoleCharacters[x, y].IsDifferent(activeCharacters[x, y]))
                     {
                         needsToBeUpdated.Add((x, y));
-                        
+
                     }
                 }
             }
@@ -101,6 +101,17 @@ namespace ConsoleRPG
                 for (int y = 0; y < consoleCharacters.GetLength(1); y++)
                 {
                     consoleCharacters[x, y] = new ConsoleCharacter(' ', new Color(Color.Colors.White), new Color(Color.Colors.Black));
+                }
+            }
+        }
+
+        public static void ClearActiveCharacters()
+        {
+            for (int x = 0; x < consoleCharacters.GetLength(0); x++)
+            {
+                for (int y = 0; y < consoleCharacters.GetLength(1); y++)
+                {
+                    activeCharacters[x, y] = new ConsoleCharacter(' ', new Color(Color.Colors.White), new Color(Color.Colors.Black));
                 }
             }
         }
@@ -130,17 +141,17 @@ namespace ConsoleRPG
             (int r, int g, int b) textColorA = (textColor.r, textColor.g, textColor.b);
             (int r, int g, int b) textColorB = (consoleCharacter.textColor.r, consoleCharacter.textColor.g, consoleCharacter.textColor.b);
 
-            if(backgroundColorA != backgroundColorB)
+            if (backgroundColorA != backgroundColorB)
             {
                 return true;
             }
 
-            if(textColorA != textColorB)
+            if (textColorA != textColorB)
             {
                 return true;
             }
 
-            if(consoleCharacter.text != text)
+            if (consoleCharacter.text != text)
             {
                 return true;
             }

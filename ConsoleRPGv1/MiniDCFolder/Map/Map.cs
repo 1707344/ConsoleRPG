@@ -29,6 +29,8 @@ namespace ConsoleRPG
             height = sizeY;
             width = sizeX;
             CreateBackground(sizeX, sizeY);
+
+
         }
 
         void CreateBackground(int sizeX, int sizeY)

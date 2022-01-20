@@ -19,6 +19,7 @@
         public bool OnCollision(BaseObject baseObject)
         {
             MiniDC.gamePlaying = false;
+            MiniDC.startNextLevel = true;
             int numMonsters = GetMap().objects.FindAll(x => x.GetType().Name == "Monster").Count;
 
             if (numMonsters == 0)
@@ -29,6 +30,7 @@
             {
                 EndScreen.ending = EndScreen.Ending.Pacifist;
             }
+
             return true;
         }
     }

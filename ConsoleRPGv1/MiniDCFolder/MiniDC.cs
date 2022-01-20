@@ -12,47 +12,36 @@ namespace ConsoleRPG
         public static bool gamePlaying = true;
         static int highestFrame;
         static bool inputLoop;
+        public static bool startNextLevel;
+        public static int currentLevel;
+        static string[] maps;//List of map names
 
         public static void PlayGame()
         {
+            maps = new string[] { Properties.Resources.Map1, Properties.Resources.Map2 };
             Console.CursorVisible = false;
             time = new Time();
 
             Thread inputThread = new Thread(new ThreadStart(InputLoop));
             inputThread.Start();
 
-            map = TextFileToMap("Map1.txt");
+
+            map = TextFileToMap(maps[0]);
+
             ShowStartMenu();
-
-
             Console.Clear();
 
 
 
-            Color black = new Color(Color.Colors.Black);
-            for (int y = 0; y < map.height; y++)
-            {
-                for (int x = 0; x < map.width * 2; x++)
-                {
-                    Console.SetCursorPosition(x, y);
 
 
-                    Console.Write("\x1b[48;2;" + black.r + ";" + black.g + ";" + black.b + "m");
-                    Console.Write("\x1b[38;2;" + black.r + ";" + black.g + ";" + black.b + "m");
-                    Console.Write(" ");
-                }
-            }
-
-            GameLoop();//On main thread
-
-
-
-            EndScreen.Display();
+            //EndScreen.Display();
 
         }
 
         public static void GameLoop()
         {
+            player.LoadInput();
 
             while (gamePlaying)
             {
@@ -77,7 +66,47 @@ namespace ConsoleRPG
 
             }
 
+            if (startNextLevel)
+            {
+                startNextLevel = false;
+                gamePlaying = true;
+                currentLevel++;
+                if (currentLevel >= maps.Length)
+                {
+                    EndScreen.Display();
+                    return;
+                }
+
+                StartLevel(currentLevel);
+            }
+
         }
+
+        public static void StartLevel(int level)
+        {
+            InputHandler.ClearListeners();
+            ConsoleHandler.ClearActiveCharacters();
+            map = null;
+            map = TextFileToMap(maps[level]);
+
+            Color black = new Color(Color.Colors.Black);
+            for (int y = 0; y < map.height; y++)
+            {
+                for (int x = 0; x < map.width * 2; x++)
+                {
+                    Console.SetCursorPosition(x, y);
+
+
+                    Console.Write("\x1b[48;2;" + black.r + ";" + black.g + ";" + black.b + "m");
+                    Console.Write("\x1b[38;2;" + black.r + ";" + black.g + ";" + black.b + "m");
+                    Console.Write(" ");
+                }
+            }
+
+            GameLoop();//Start game loop
+        }
+
+
 
         public static void InputLoop()
         {
@@ -87,13 +116,13 @@ namespace ConsoleRPG
             }
         }
 
-        static Map TextFileToMap(string mapName)
+        static Map TextFileToMap(string mapString)
         {
             string[] text = new string[10];
             try
             {
 
-                text = System.IO.File.ReadAllLines(@"..\..\..\Maps\"+mapName);
+                text = mapString.Replace("\r", "").Split('\n');
             }
             catch (Exception e)
             {
@@ -166,6 +195,8 @@ namespace ConsoleRPG
             {
                 StartMenu.Display();
             }
+
+            StartLevel(0);
 
         }
 

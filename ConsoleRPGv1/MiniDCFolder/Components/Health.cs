@@ -15,7 +15,7 @@ namespace ConsoleRPG
 
         public override void Update()
         {
-            if(health <= 0)
+            if (health <= 0)
             {
                 onDeath();
             }

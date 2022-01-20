@@ -9,10 +9,29 @@ namespace ConsoleRPG
     public static class InputHandler
     {
         static List<KeyListener> listeners = new List<KeyListener>();
+        static List<KeyListener> newListeners = new List<KeyListener>();
+        static bool clearListeners = false;
+
 
         public static void Update()
         {
+            //Add newListeners
+
+
+            //Update Listeners
             ConsoleKeyInfo key = Console.ReadKey(true);
+            //Clear listeners if clearListners is true
+            if (clearListeners)
+            {
+                listeners.Clear();
+                clearListeners = false;
+            }
+            foreach (KeyListener keyListener in newListeners)
+            {
+                listeners.Add(keyListener);
+            }
+            newListeners.Clear();
+
             foreach (KeyListener listener in listeners)
             {
                 if (listener.key == key.Key)
@@ -21,11 +40,19 @@ namespace ConsoleRPG
                 }
             }
 
+
+
+
         }
 
         public static void AddListener(KeyListener listener)
         {
-            listeners.Add(listener);
+            newListeners.Add(listener);
+        }
+
+        public static void ClearListeners()
+        {
+            clearListeners = true;
         }
     }
 

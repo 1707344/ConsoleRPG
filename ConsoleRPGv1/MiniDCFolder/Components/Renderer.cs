@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace ConsoleRPG
+﻿namespace ConsoleRPG
 {
     /*
      * Using a way to get all of the colors simple example

@@ -24,11 +24,11 @@ namespace ConsoleRPG
 
         }
 
-        public void Move(Direction dir)
+        public bool Move(Direction dir)
         {
             if (stopMovement)
             {
-                return;
+                return false;
             }
 
             int dx = 0;
@@ -65,11 +65,12 @@ namespace ConsoleRPG
                 {
                     collider.Collision(objects.Find(x => x.GetComponent<Collider>() != null && !x.GetComponent<Collider>().isTrigger));
                 }
-                return;
+                return false;
             }
 
             position.x += dx;
             position.y += dy;
+            return true;
 
         }
     }
