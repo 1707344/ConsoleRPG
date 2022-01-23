@@ -18,7 +18,11 @@ namespace ConsoleRPG
 
         public static void PlayGame()
         {
-            maps = new string[] { Properties.Resources.Map1, Properties.Resources.Map2 };
+            MapGenerator mapGen = new MapGenerator();
+            Cell[,] mapCells = mapGen.GenerateMap();
+
+
+            maps = new string[] { mapGen.CellsToString(mapGen.GenerateMap()), Properties.Resources.Map2 };
             Console.CursorVisible = false;
             time = new Time();
 
@@ -26,7 +30,7 @@ namespace ConsoleRPG
             inputThread.Start();
 
 
-            map = TextFileToMap(maps[0]);
+            map = TextFileToMap(mapGen.CellsToString(mapGen.GenerateMap()));
 
             ShowStartMenu();
             Console.Clear();

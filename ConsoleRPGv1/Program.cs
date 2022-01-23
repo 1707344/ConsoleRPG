@@ -24,6 +24,9 @@ namespace ConsoleRPG
 
             Console.Write("\x1b[48;2;" + 0 + ";" + 0 + ";" + 0 + "m");
 
+            //MapGenerator mapGen = new MapGenerator();
+            //Console.Write(mapGen.CellsToString(mapGen.RecursiveBacktracker()));
+
 
             ConsoleRPG.MiniDC.PlayGame();
         }

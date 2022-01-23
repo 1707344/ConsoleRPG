@@ -50,14 +50,31 @@ namespace ConsoleRPG
 
         public void LoadInput()
         {
-            InputHandler.AddListener(new KeyListener(MoveUp, ConsoleKey.W));
-            InputHandler.AddListener(new KeyListener(MoveDown, ConsoleKey.S));
-            InputHandler.AddListener(new KeyListener(MoveLeft, ConsoleKey.A));
-            InputHandler.AddListener(new KeyListener(MoveRight, ConsoleKey.D));
-            InputHandler.AddListener(new KeyListener(AimUp, ConsoleKey.UpArrow));
-            InputHandler.AddListener(new KeyListener(AimDown, ConsoleKey.DownArrow));
-            InputHandler.AddListener(new KeyListener(AimLeft, ConsoleKey.LeftArrow));
-            InputHandler.AddListener(new KeyListener(AimRight, ConsoleKey.RightArrow));
+            bool swapAimAndMove = false;
+            if (swapAimAndMove)
+            {
+
+                InputHandler.AddListener(new KeyListener(MoveUp, ConsoleKey.UpArrow));
+                InputHandler.AddListener(new KeyListener(MoveDown, ConsoleKey.DownArrow));
+                InputHandler.AddListener(new KeyListener(MoveLeft, ConsoleKey.LeftArrow));
+                InputHandler.AddListener(new KeyListener(MoveRight, ConsoleKey.RightArrow));
+                InputHandler.AddListener(new KeyListener(AimUp, ConsoleKey.W));
+                InputHandler.AddListener(new KeyListener(AimDown, ConsoleKey.S));
+                InputHandler.AddListener(new KeyListener(AimLeft, ConsoleKey.A));
+                InputHandler.AddListener(new KeyListener(AimRight, ConsoleKey.D));
+            }
+            else
+            {
+
+                InputHandler.AddListener(new KeyListener(MoveUp, ConsoleKey.W));
+                InputHandler.AddListener(new KeyListener(MoveDown, ConsoleKey.S));
+                InputHandler.AddListener(new KeyListener(MoveLeft, ConsoleKey.A));
+                InputHandler.AddListener(new KeyListener(MoveRight, ConsoleKey.D));
+                InputHandler.AddListener(new KeyListener(AimUp, ConsoleKey.UpArrow));
+                InputHandler.AddListener(new KeyListener(AimDown, ConsoleKey.DownArrow));
+                InputHandler.AddListener(new KeyListener(AimLeft, ConsoleKey.LeftArrow));
+                InputHandler.AddListener(new KeyListener(AimRight, ConsoleKey.RightArrow));
+            }
             //InputHandler.AddListener(new KeyListener(ShootFireball, ConsoleKey.F));
             InputHandler.AddListener(new KeyListener(ShootFireball, ConsoleKey.Spacebar));
 

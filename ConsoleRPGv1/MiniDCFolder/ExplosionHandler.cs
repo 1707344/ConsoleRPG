@@ -30,18 +30,21 @@ namespace ConsoleRPG
 
         public static void Update()
         {
+            AddNewExplosionCells();
 
+            UpdateExplosionSpread();
 
-            if (Player.test)
-            {
-                Player.turnOffTest = true;
-                //newExplosionCells.Add(new ExplosionCell(GetMap(), position.x, position.y, 0.5f, 0.05f, 10));
-            }
-            else
-            {
-                //return;
-            }
+            DecayCells();
 
+            ApplyColor();
+
+            ApplyDamage();
+        }
+        /// <summary>
+        /// Adds the new explosion cells to the main list.
+        /// </summary>
+        static void AddNewExplosionCells()
+        {
             foreach (ExplosionCell explosionCell in newExplosionCells)
             {
                 explosionCells.Add(explosionCell);
@@ -49,6 +52,13 @@ namespace ConsoleRPG
 
             newExplosionCells.Clear();
 
+        }
+
+        /// <summary>
+        /// Updates the spread of the explosion. So creates new explosion cells and such
+        /// </summary>
+        static void UpdateExplosionSpread()
+        {
             foreach (ExplosionCell explosionCell in explosionCells)
             {
                 explosionCell.energyLost = 0;
@@ -58,34 +68,51 @@ namespace ConsoleRPG
                 ExplosionCell dNewExplosionCell = explosionCell.CalculateDirection((1, 0));
                 explosionCell.energy -= explosionCell.energyLost;
 
-                if (aNewExplosionCell != null
-                    && !newExplosionCells.Exists(x => aNewExplosionCell.position.x == x.position.x && aNewExplosionCell.position.y == x.position.y)
-                    && !explosionCells.Exists(x => aNewExplosionCell.position.x == x.position.x && aNewExplosionCell.position.y == x.position.y))
-                {
-                    newExplosionCells.Add(aNewExplosionCell);
-                }
-                if (bNewExplosionCell != null
-                    && !newExplosionCells.Exists(x => bNewExplosionCell.position.x == x.position.x && bNewExplosionCell.position.y == x.position.y)
-                    && !explosionCells.Exists(x => bNewExplosionCell.position.x == x.position.x && bNewExplosionCell.position.y == x.position.y))
-                {
-                    newExplosionCells.Add(bNewExplosionCell);
-                }
-                if (cNewExplosionCell != null
-                    && !newExplosionCells.Exists(x => cNewExplosionCell.position.x == x.position.x && cNewExplosionCell.position.y == x.position.y)
-                    && !explosionCells.Exists(x => cNewExplosionCell.position.x == x.position.x && cNewExplosionCell.position.y == x.position.y))
-                {
-                    newExplosionCells.Add(cNewExplosionCell);
-                }
-                if (dNewExplosionCell != null
-                    && !newExplosionCells.Exists(x => dNewExplosionCell.position.x == x.position.x && dNewExplosionCell.position.y == x.position.y)
-                    && !explosionCells.Exists(x => dNewExplosionCell.position.x == x.position.x && dNewExplosionCell.position.y == x.position.y))
-                {
-                    newExplosionCells.Add(dNewExplosionCell);
-                }
+                CreateNewExplosionCell(aNewExplosionCell);
+                CreateNewExplosionCell(bNewExplosionCell);
+                CreateNewExplosionCell(cNewExplosionCell);
+                CreateNewExplosionCell(dNewExplosionCell);
 
             }
+        }
 
-            //Apply decay and remove dead explosion cells
+        /// <summary>
+        /// Trys to create new Explosion cell. If there is already an explosion cell in the same position it won't. 
+        /// </summary>
+        /// <param name="explosionCell"></param>
+        static void CreateNewExplosionCell(ExplosionCell explosionCell)
+        {
+            if (explosionCell != null
+                    && !newExplosionCells.Exists(x => explosionCell.position.x == x.position.x && explosionCell.position.y == x.position.y)
+                    && !explosionCells.Exists(x => explosionCell.position.x == x.position.x && explosionCell.position.y == x.position.y))
+            {
+                newExplosionCells.Add(explosionCell);
+            }
+        }
+
+        /// <summary>
+        /// Applies Damage for all ExplosionCells
+        /// </summary>
+        static void ApplyDamage()
+        {
+            foreach (ExplosionCell explosion in explosionCells)
+            {
+                explosion.ApplyDamage();
+            }
+        }
+
+        static void ApplyColor()
+        {
+            foreach (ExplosionCell explosionCell in explosionCells)
+            {
+                explosionCell.renderer.color = explosionCell.GetColor();
+            }
+        }
+        /// <summary>
+        /// Apply decay and remove dead explosion cells
+        /// </summary>
+        static void DecayCells()
+        {
             List<ExplosionCell> destroyedExplosionCells = new List<ExplosionCell>();
             foreach (ExplosionCell explosionCell in explosionCells)
             {
@@ -100,31 +127,11 @@ namespace ConsoleRPG
             {
                 explosionCells.Remove(explosionCell);
             }
-
-            //Apply color
-            foreach (ExplosionCell explosionCell in explosionCells)
-            {
-                explosionCell.renderer.color = explosionCell.GetColor();
-            }
-
-
-            //Add damage
-            foreach (ExplosionCell explosion in explosionCells)
-            {
-                explosion.ApplyDamage();
-            }
-
-            if (explosionCells.Count == 0 && newExplosionCells.Count == 0)
-            {
-                //destroy = true;
-            }
         }
 
-        /// <summary>
-        /// Calculates for one direction
-        /// </summary>
-
     }
+
+   
 
     class ExplosionCell : BaseObject
     {
