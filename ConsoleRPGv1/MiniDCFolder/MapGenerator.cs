@@ -86,7 +86,7 @@ namespace ConsoleRPG
         }
 
 
-
+        #region CellsToString
         /// <summary>
         /// Converts a cell array to a string
         /// </summary>
@@ -143,18 +143,33 @@ namespace ConsoleRPG
                 }
             }
         }
-        Cell GetRandomCellAround(Cell currentCell)
+        char[,] CellsToCharArr(Cell[,] cells)
         {
-            //Get all the unvisitedCells
-            List<Cell> unVisitedCells = currentCell.cellsAround.ToList().FindAll(x => x != null && !x.visited);
-            if(unVisitedCells.Count != 0)
-            {
-                return unVisitedCells[random.Next(0, unVisitedCells.Count)];
+            char[,] charMap = new char[cells.GetLength(0) * 2, cells.GetLength(1) * 2];
 
+            for (int x = 0; x < cells.GetLength(0); x++)
+            {
+                for (int y = 0; y < cells.GetLength(1); y++)
+                {
+
+                    charMap[x * 2 + 1, y * 2 + 1] = '.';
+
+
+                    if (x + 1 < cells.GetLength(0) && HasWallBetween(cells[x, y], cells[x + 1, y]))//Horizontal walls
+                    {
+                        charMap[2 * (x + 1), 2 * y + 1] = '#';
+                    }
+                    if (y + 1 < cells.GetLength(1) && HasWallBetween(cells[x, y], cells[x, y + 1]))//Vertical Walls
+                    {
+                        charMap[2 * x + 1, 2 * (y + 1)] = '#';
+                    }
+
+
+
+                }
             }
 
-            return null;
-
+            return charMap;
         }
         string CharArrToString(char[,] charMap)
         {
@@ -201,6 +216,23 @@ namespace ConsoleRPG
 
             return map;
         }
+
+        #endregion
+
+        #region GenerateMap Helpers
+        Cell GetRandomCellAround(Cell currentCell)
+        {
+            //Get all the unvisitedCells
+            List<Cell> unVisitedCells = currentCell.cellsAround.ToList().FindAll(x => x != null && !x.visited);
+            if(unVisitedCells.Count != 0)
+            {
+                return unVisitedCells[random.Next(0, unVisitedCells.Count)];
+
+            }
+
+            return null;
+
+        }
         (int x, int y) GetXYFromDirection(int direction)
         {
             switch (direction)
@@ -216,34 +248,6 @@ namespace ConsoleRPG
                 default:
                     return (0, 0);
             }
-        }
-        char[,] CellsToCharArr(Cell[,] cells)
-        {
-            char[,] charMap = new char[cells.GetLength(0) * 2, cells.GetLength(1) * 2];
-
-            for (int x = 0; x < cells.GetLength(0); x++)
-            {
-                for (int y = 0; y < cells.GetLength(1); y++)
-                {
-
-                    charMap[x * 2 + 1, y * 2 + 1] = '.';
-
-
-                    if (x + 1 < cells.GetLength(0) && HasWallBetween(cells[x, y], cells[x + 1, y]))//Horizontal walls
-                    {
-                        charMap[2 * (x + 1), 2 * y + 1] = '#';
-                    }
-                    if (y + 1 < cells.GetLength(1) && HasWallBetween(cells[x, y], cells[x, y + 1]))//Vertical Walls
-                    {
-                        charMap[2 * x + 1, 2 * (y + 1)] = '#';
-                    }
-
-
-
-                }
-            }
-
-            return charMap;
         }
         void RemoveWallBetweenCells(Cell a, Cell b)
         {
@@ -385,6 +389,7 @@ namespace ConsoleRPG
 
             return allVisited;
         }
+        #endregion
     }
 
     /// <summary>
@@ -412,14 +417,5 @@ namespace ConsoleRPG
             visited = false;
 
         }
-    }
-
-    class CellConnection
-    {
-        public Cell otherCell;
-        /// <summary>
-        /// Is there a wall in between the cells?
-        /// </summary>
-        public bool hasWall;
     }
 }

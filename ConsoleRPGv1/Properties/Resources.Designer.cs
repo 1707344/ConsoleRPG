@@ -61,6 +61,15 @@ namespace ConsoleRPG.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        public static string HelpText {
+            get {
+                return ResourceManager.GetString("HelpText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to # # # # # # # # # # # # # # # # # # # # # # # # #
         ///# . . . M . M . . M . . . . . . . . . # . # . . #
         ///# . # # . # # # . # . . . . . . . # . # . # . . #

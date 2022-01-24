@@ -27,6 +27,9 @@ namespace ConsoleRPG
         Color fireballAimFlashColor1;
         Color fireballAimFlashColor2;
 
+        float fireballStrength = 20;
+        float fireballSpeed = 100;
+
         public Player(Map map, int x, int y) : base(map)
         {
 
@@ -280,7 +283,7 @@ namespace ConsoleRPG
         }
         public bool SpawnFireball()
         {
-            GetMap().newObjects.Add(new Fireball(GetMap(), aimingIndicator.position.x, aimingIndicator.position.y, aimingIndicator.direction, testStrength));
+            GetMap().newObjects.Add(new Fireball(GetMap(), aimingIndicator.position.x, aimingIndicator.position.y, aimingIndicator.direction, fireballStrength, fireballSpeed));
             return true;
         }
 

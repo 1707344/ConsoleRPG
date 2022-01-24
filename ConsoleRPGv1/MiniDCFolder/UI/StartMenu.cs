@@ -12,8 +12,8 @@ namespace ConsoleRPG
         static StartMenu()
         {
             buttonSelected = 0;
-            buttons.Add(new Button(5, 10, "Start", ConsoleColor.White, ConsoleColor.Yellow, StartOption));
-            buttons.Add(new Button(5, 11, "Help", ConsoleColor.White, ConsoleColor.Yellow, HelpOption));
+            buttons.Add(new Button(5, 10, "Start", ConsoleColor.White, ConsoleColor.Green, StartOption));
+            buttons.Add(new Button(5, 11, "Help", ConsoleColor.White, ConsoleColor.Green, HelpOption));
             buttons.Add(new Button(5, 12, "Exit", ConsoleColor.White, ConsoleColor.DarkRed, ExitOption));
 
             InputHandler.AddListener(new KeyListener(delegate () { buttonSelected--; return true; }, ConsoleKey.UpArrow));
