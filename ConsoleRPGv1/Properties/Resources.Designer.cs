@@ -61,7 +61,20 @@ namespace ConsoleRPG.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to Help Menu:
+        ///
+        ///Character control:
+        ///	Your character is the green smiley face. 
+        ///	Use WASD to move. 
+        ///	Use the arrow keys to aim.
+        ///	Then you can use space to shoot a fireball. 
+        ///
+        ///Enemy: 
+        ///	The red symbols are enemies and they are trying to hurt you. 
+        ///
+        ///Level Progression:
+        ///	Get to the ‘/’ that is in the bottom right to continue to the next level.
+        ///.
         /// </summary>
         public static string HelpText {
             get {

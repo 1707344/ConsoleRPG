@@ -90,6 +90,7 @@ namespace ConsoleRPG
         {
             InputHandler.ClearListeners();
             ConsoleHandler.ClearActiveCharacters();
+            Console.Clear();
             map = null;
             map = TextFileToMap(maps[level]);
 
