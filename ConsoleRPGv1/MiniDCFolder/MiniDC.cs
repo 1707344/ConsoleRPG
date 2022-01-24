@@ -22,7 +22,7 @@ namespace ConsoleRPG
             Cell[,] mapCells = mapGen.GenerateMap();
 
 
-            maps = new string[] { mapGen.CellsToString(mapGen.GenerateMap()), Properties.Resources.Map2 };
+            maps = new string[] { mapGen.CellsToString(mapGen.GenerateMap()), mapGen.CellsToString(mapGen.GenerateMap()), mapGen.CellsToString(mapGen.GenerateMap()), mapGen.CellsToString(mapGen.GenerateMap()) };
             Console.CursorVisible = false;
             time = new Time();
 
@@ -174,7 +174,7 @@ namespace ConsoleRPG
                             EndScreen.startingNumMonsters++;
                             break;
                         case 'P':
-                            player = new Player(map, i, j);
+                            CreatePlayer(map, i, j);
                             break;
                         case 'S':
                             new Stairs(map, i, j);
@@ -190,6 +190,25 @@ namespace ConsoleRPG
 
 
             return map;
+
+        }
+
+        /// <summary>
+        /// If player already exists stats like health will carry over
+        /// </summary>
+        static void CreatePlayer(Map map, int x, int y)
+        {
+            if(player == null)
+            {
+                player = new Player(map, x, y);
+            }
+            else
+            {
+                Health playerHealth = player.GetComponent<Health>();
+                player = new Player(map, x, y);
+                player.GetComponent<Health>().health = playerHealth.health;
+                player.GetComponent<Health>().maxHealth = playerHealth.maxHealth;
+            }
 
         }
 
