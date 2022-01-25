@@ -14,15 +14,16 @@ namespace ConsoleRPG
         static bool inputLoop;
         public static bool startNextLevel;
         public static int currentLevel;
-        static string[] maps;//List of map names
+        static Map[] maps;
+        //static string[] maps;//List of map names
 
         public static void PlayGame()
         {
             MapGenerator mapGen = new MapGenerator();
             Cell[,] mapCells = mapGen.GenerateMap();
 
-
-            maps = new string[] { mapGen.CellsToString(mapGen.GenerateMap()), mapGen.CellsToString(mapGen.GenerateMap()), mapGen.CellsToString(mapGen.GenerateMap()), mapGen.CellsToString(mapGen.GenerateMap()) };
+            maps = new Map[] { mapGen.CellsToMap(mapGen.GenerateMap()), mapGen.CellsToMap(mapGen.GenerateMap()) };
+            //maps = new string[] { mapGen.CellsToMap(mapGen.GenerateMap()), mapGen.CellsToMap(mapGen.GenerateMap()), mapGen.CellsToMap(mapGen.GenerateMap()), mapGen.CellsToMap(mapGen.GenerateMap()) };
             Console.CursorVisible = false;
             time = new Time();
 
@@ -30,7 +31,7 @@ namespace ConsoleRPG
             inputThread.Start();
 
 
-            map = TextFileToMap(mapGen.CellsToString(mapGen.GenerateMap()));
+            
 
             ShowStartMenu();
             Console.Clear();
@@ -92,7 +93,9 @@ namespace ConsoleRPG
             ConsoleHandler.ClearActiveCharacters();
             Console.Clear();
             map = null;
-            map = TextFileToMap(maps[level]);
+            map = maps[level];
+            CreatePlayer(map, 1, 1);
+
 
             Color black = new Color(Color.Colors.Black);
             for (int y = 0; y < map.height; y++)

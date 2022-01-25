@@ -91,37 +91,38 @@ namespace ConsoleRPG
         /// Converts a cell array to a string
         /// </summary>
         /// <returns></returns>
-        public string CellsToString(Cell[,] cells)
+        public Map CellsToMap(Cell[,] cells)
         {
             char[,] charMap = CellsToCharArr(cells);
 
             //Adding corner pieces
             AddCornerPieces(charMap);
 
-            //Adding player and enemies and stuff
+            Map map = CharArrToMap(charMap);
 
-            AddObjects(charMap);
+            //Adding player and enemies and stuff
+            AddObjects(map);
             
 
-            return CharArrToString(charMap);
+            return map;
         }
         /// <summary>
         /// Adds objects like the player and the enemies
         /// </summary>
         /// <param name="charMap"></param>
-        void AddObjects(char[,] charMap)
+        void AddObjects(Map map)
         {
-            charMap[1, 1] = 'P';
-            charMap[charMap.GetLength(0) - 1, charMap.GetLength(1) - 1] = 'S';
+            //charMap[1, 1] = 'P';
+            new Stairs(map, map.width - 2, map.height - 2);
 
-            for (int x = 5; x < charMap.GetLength(0); x++)
+            for (int x = 5; x < map.width; x++)
             {
-                for (int y = 5; y < charMap.GetLength(1); y++)
+                for (int y = 5; y < map.height; y++)
                 {
 
-                    if (charMap[x, y] == '.' && random.Next(0, 20) <= 1)
+                    if (!map.GetObjectsAtPosition(x, y).Exists(x => x.obj.GetType() == typeof(Wall)) && random.Next(0, 25) <= 1)
                     {
-                        charMap[x, y] = 'M';
+                        new Monster(map, x, y);
                     }
                 }
             }
@@ -145,7 +146,7 @@ namespace ConsoleRPG
         }
         char[,] CellsToCharArr(Cell[,] cells)
         {
-            char[,] charMap = new char[cells.GetLength(0) * 2, cells.GetLength(1) * 2];
+            char[,] charMap = new char[cells.GetLength(0) * 2 + 1, cells.GetLength(1) * 2 + 1];
 
             for (int x = 0; x < cells.GetLength(0); x++)
             {
@@ -158,61 +159,67 @@ namespace ConsoleRPG
                     if (x + 1 < cells.GetLength(0) && HasWallBetween(cells[x, y], cells[x + 1, y]))//Horizontal walls
                     {
                         charMap[2 * (x + 1), 2 * y + 1] = '#';
+                    }else if(!(x + 1 < cells.GetLength(0))){//Left Wall
+                        charMap[0, 2 * y] = '#';
+                        charMap[0, (2 * y) + 1] = '#';
                     }
                     if (y + 1 < cells.GetLength(1) && HasWallBetween(cells[x, y], cells[x, y + 1]))//Vertical Walls
                     {
                         charMap[2 * x + 1, 2 * (y + 1)] = '#';
+                    }else if( !(y + 1 < cells.GetLength(1)))//Top Wall
+                    {
+                        charMap[2 * x, 0] = '#';
+                        charMap[(2 * x) + 1, 0] = '#';
                     }
 
+                    if(y * 2 >= (cells.GetLength(1) - 1) * 2)//Bottom Wall
+                    {
+                        charMap[2 * x, cells.GetLength(1) * 2] = '#';
+                        charMap[(2 * x) + 1, cells.GetLength(1) * 2] = '#';
+                    }
 
-
+                    if (x * 2 >= (cells.GetLength(0) - 1) * 2)//Right wall
+                    {
+                        charMap[cells.GetLength(0) * 2, 2 * y] = '#';
+                        charMap[cells.GetLength(0) * 2, (2 * y) + 1] = '#';
+                    }
+                    Console.ForegroundColor = ConsoleColor.Blue;
+                    Console.BackgroundColor = ConsoleColor.Yellow;
                 }
             }
 
             return charMap;
         }
-        string CharArrToString(char[,] charMap)
+
+        Map CharArrToMap(char[,] charMap)
         {
-            string map = "";
-            for (int x = 0; x < charMap.GetLength(0) + 1; x++)
+            Map map = new Map(charMap.GetLength(0), charMap.GetLength(1));
+            for (int x = 0; x < charMap.GetLength(0); x++)
             {
-                for (int y = 0; y < charMap.GetLength(1) + 1; y++)
+                for (int y = 0; y < charMap.GetLength(1); y++)
                 {
-                    if (x == 0)
+                    switch (charMap[x, y])
                     {
-                        map += '#';
-                        continue;
+                        case '#':
+                            new Wall(map, x, y);
+                            break;
+                        case 'F':
+                            new FreezingTrap(map, x, y);
+                            break;
+                        case 'M':
+                            new Monster(map, x, y);
+                            EndScreen.startingNumMonsters++;
+                            break;
+                        case 'S':
+                            new Stairs(map, x, y);
+                            break;
+                        default:
+                            //objectInsideCell = null;
+                            break;
                     }
-                    else if (x == charMap.GetLength(0))
-                    {
 
-                        map += '#';
-                        continue;
-                    }
-                    else if (y == 0)
-                    {
-                        map += '#';
-                        continue;
-                    }
-                    else if (y == charMap.GetLength(1))
-                    {
-                        map += '#';
-                        continue;
-
-                    }
-                    if (charMap[x, y] == '#')
-                    {
-                        map += "#";
-                    }
-                    else
-                    {
-                        map += charMap[x, y];
-                    }
                 }
-                map += "\n";
             }
-
-            map = map.Remove(map.Length - 1);
 
             return map;
         }
@@ -329,7 +336,7 @@ namespace ConsoleRPG
         }
         void AddEmptyZones(Cell[,] cells)
         {
-            for (int i = 0; i < 8; i++)
+            for (int i = 0; i < 10; i++)
             {
                 int sizeX = random.Next(2, 5);
                 int sizeY = random.Next(2, 5);
