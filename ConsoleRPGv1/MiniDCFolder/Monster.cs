@@ -12,22 +12,27 @@ namespace ConsoleRPG
         Collider collider;
         Health health;
         Cooldown flashingCooldown;
+        Patrol patrol;
         bool flashing;
         bool flashingSwitch;
         int explosionTime = 500;
+        int chasePlayerDist = 10;
 
         bool isExploding = false;
 
-        public Monster(Map map, int x, int y) : base(map)
+        public Monster(Map map, int x, int y, PatrolPoint[] patrolPoints) : base(map)
         {
+            Random random = new Random((int)DateTime.Now.Ticks);
+
             collider = new Collider(this, OnCollision);
             health = new Health(this, 2, OnDeath);
             renderer = new Renderer(this, '@', 2, new Color(255, 43, 43), false);
             position = new Position(this, x, y);
             movement = new Movement(this);
-            pathFinder = new PathFinder(this, 9);
-            movementCooldown = new Cooldown(500);
+            pathFinder = new PathFinder(this, 100);
+            movementCooldown = new Cooldown(500 + random.Next(-50, 50));
             flashingCooldown = new Cooldown(75);
+            patrol = new Patrol(patrolPoints);
         }
 
         public bool OnCollision(BaseObject baseObject)
@@ -71,9 +76,37 @@ namespace ConsoleRPG
             }
             else if (movementCooldown.IsCooldownDone())
             {
+                if(pathFinder.GetMoveNum(MiniDC.player.GetComponent<Position>()) < chasePlayerDist)
+                {
+                    movement.Move(pathFinder.GetNextMove(MiniDC.player.GetComponent<Position>()));
+                }
+                else
+                {
+                    PatrolPointMove();
+
+                }
+
                 movementCooldown.StartCooldown();
-                movement.Move(pathFinder.GetNextMove(MiniDC.player.GetComponent<Position>()));
+                
+
             }
+        }
+
+        /// <summary>
+        /// Called when the monster is moving to a patrol point
+        /// </summary>
+        void PatrolPointMove()
+        {
+            Movement.Direction direction = pathFinder.GetNextMove(patrol.GetCurrentPatrolPointPosition());
+
+            if (direction == Movement.Direction.None)
+            {
+                patrol.NextPatrolPoint();
+                direction = pathFinder.GetNextMove(patrol.GetCurrentPatrolPointPosition());
+            }
+
+            movement.Move(direction);
+
         }
 
         void PrepareToExplode()

@@ -173,7 +173,7 @@ namespace ConsoleRPG
                             new FreezingTrap(map, i, j);
                             break;
                         case 'M':
-                            new Monster(map, i, j);
+                            //new Monster(map, i, j);
                             EndScreen.startingNumMonsters++;
                             break;
                         case 'P':

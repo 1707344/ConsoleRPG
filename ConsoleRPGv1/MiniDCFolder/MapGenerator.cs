@@ -115,16 +115,44 @@ namespace ConsoleRPG
             //charMap[1, 1] = 'P';
             new Stairs(map, map.width - 2, map.height - 2);
 
+            //Getting all empty Spaces
+            List<Position> emptySpaces = new List<Position>();
+
             for (int x = 5; x < map.width; x++)
             {
                 for (int y = 5; y < map.height; y++)
                 {
-
-                    if (!map.GetObjectsAtPosition(x, y).Exists(x => x.obj.GetType() == typeof(Wall)) && random.Next(0, 25) <= 1)
+                    Position position = map.GetObjectsAtPosition(x, y)[0];
+                    if (!map.GetObjectsAtPosition(x, y).Exists(x => x.obj.GetType() == typeof(Wall)))
                     {
-                        new Monster(map, x, y);
+                        emptySpaces.Add(position);
                     }
                 }
+            }
+
+            int numOfEnemies = 20;
+            
+
+            for (int i = 0; i < numOfEnemies; i++)
+            {   
+                if(emptySpaces.Count <= 1)
+                {
+                    break;
+                }
+
+                //Creating and enemy and their patrol points
+                int randIndex = 0;
+                PatrolPoint[] patrolPoints = new PatrolPoint[3];
+                for (int j = 0; j < patrolPoints.Length; j++)
+                {
+                    randIndex = random.Next(0, emptySpaces.Count - 1);
+                    patrolPoints[j] = new PatrolPoint(map, emptySpaces[randIndex].x, emptySpaces[randIndex].y);
+
+                }
+
+                randIndex = random.Next(0, emptySpaces.Count - 1);
+                new Monster(map, emptySpaces[randIndex].x, emptySpaces[randIndex].y, patrolPoints);
+                emptySpaces.RemoveAt(randIndex);
             }
 
         }
@@ -183,8 +211,6 @@ namespace ConsoleRPG
                         charMap[cells.GetLength(0) * 2, 2 * y] = '#';
                         charMap[cells.GetLength(0) * 2, (2 * y) + 1] = '#';
                     }
-                    Console.ForegroundColor = ConsoleColor.Blue;
-                    Console.BackgroundColor = ConsoleColor.Yellow;
                 }
             }
 
@@ -207,7 +233,7 @@ namespace ConsoleRPG
                             new FreezingTrap(map, x, y);
                             break;
                         case 'M':
-                            new Monster(map, x, y);
+                            //new Monster(map, x, y);
                             EndScreen.startingNumMonsters++;
                             break;
                         case 'S':
