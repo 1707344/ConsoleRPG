@@ -130,7 +130,7 @@ namespace ConsoleRPG
                 }
             }
 
-            int numOfEnemies = 20;
+            int numOfEnemies = 12;
             
 
             for (int i = 0; i < numOfEnemies; i++)
@@ -362,6 +362,18 @@ namespace ConsoleRPG
         }
         void AddEmptyZones(Cell[,] cells)
         {
+            for (int x = 0; x < 3; x++)
+            {
+                for (int y = 0; y < 3; y++)
+                {
+                    for (int j = 0; j < cells[x, y].wallsAround.Length; j++)
+                    { 
+                        cells[x, y].wallsAround[j] = true;
+                        //cells[x, y].visited = true;
+                    }
+                }
+            }
+
             for (int i = 0; i < 10; i++)
             {
                 int sizeX = random.Next(2, 5);

@@ -18,6 +18,7 @@ namespace ConsoleRPG
         {
             Console.Clear();
             Console.WriteLine("YOU WIN\n\n");
+            ending = Ending.None;
             switch (ending)
             {
                 case Ending.Slaughterer:
