@@ -119,5 +119,20 @@ namespace ConsoleRPG.Properties {
                 return ResourceManager.GetString("Map2", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
+        ///░   ░░░░░░   ░░░░░░░░░░░░░░░░░░░░░░░░░░░      ░░░░░   ░         ░      ░░░░
+        ///▒▒   ▒▒▒▒   ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒   ▒▒▒   ▒▒   ▒   ▒▒▒▒▒▒▒   ▒▒▒   ▒
+        ///▒▒▒   ▒   ▒▒▒▒▒▒▒   ▒▒▒▒▒   ▒▒   ▒▒▒▒▒▒▒   ▒▒▒▒   ▒   ▒   ▒▒▒▒▒▒▒   ▒▒▒▒   
+        ///▓▓▓▓▓   ▓▓▓▓▓▓▓   ▓▓   ▓▓   ▓▓   ▓▓▓▓▓▓▓   ▓▓▓▓   ▓   ▓       ▓▓▓   ▓▓▓▓   
+        ///▓▓▓▓▓   ▓▓▓▓▓▓   ▓▓▓▓   ▓   ▓▓   ▓▓▓▓▓▓▓   ▓▓▓▓   ▓   ▓   ▓▓▓▓▓▓▓   ▓▓▓▓   
+        ///▓▓▓▓▓   ▓▓▓▓▓▓▓   ▓▓   ▓▓   ▓▓   ▓▓▓▓▓▓▓   ▓▓▓   ▓ [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string YouDiedText {
+            get {
+                return ResourceManager.GetString("YouDiedText", resourceCulture);
+            }
+        }
     }
 }

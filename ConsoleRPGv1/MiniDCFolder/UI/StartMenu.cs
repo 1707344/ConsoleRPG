@@ -9,7 +9,8 @@ namespace ConsoleRPG
         static int buttonSelected;
         public static bool isShowing = true;
         static bool isHiding = false;
-        static StartMenu()
+
+        public static void LoadInputs()
         {
             buttonSelected = 0;
             buttons.Add(new Button(5, 10, "Start", ConsoleColor.White, ConsoleColor.Green, StartOption));
@@ -19,6 +20,19 @@ namespace ConsoleRPG
             InputHandler.AddListener(new KeyListener(delegate () { buttonSelected--; return true; }, ConsoleKey.UpArrow));
             InputHandler.AddListener(new KeyListener(delegate () { buttonSelected++; return true; }, ConsoleKey.DownArrow));
             InputHandler.AddListener(new KeyListener(delegate () { EnterClicked(); return true; }, ConsoleKey.Spacebar));
+            InputHandler.AddListener(new KeyListener(delegate () { EnterClicked(); return true; }, ConsoleKey.Enter));
+
+        }
+
+        public static void Close()
+        {
+            buttons = new List<Button>();
+            isHiding = false;
+            isShowing = true;
+        }
+
+        static StartMenu()
+        {
 
         }
         static void EnterClicked()

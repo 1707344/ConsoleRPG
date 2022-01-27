@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.InteropServices;
+using System.Diagnostics;
 
 namespace ConsoleRPG
 {
@@ -22,13 +23,11 @@ namespace ConsoleRPG
             ActivateColors();
             Console.CursorVisible = false;
 
-            Console.Write("\x1b[48;2;" + 0 + ";" + 0 + ";" + 0 + "m");
-
-            //MapGenerator mapGen = new MapGenerator();
-            //Console.Write(mapGen.CellsToString(mapGen.RecursiveBacktracker()));
+            Console.BackgroundColor = ConsoleColor.Black;
 
 
             ConsoleRPG.MiniDC.PlayGame();
+
         }
 
         static void ActivateColors()

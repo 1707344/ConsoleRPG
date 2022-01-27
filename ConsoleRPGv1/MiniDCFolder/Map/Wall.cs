@@ -9,7 +9,7 @@
         {
             collider = new Collider(this, OnCollision);
             position = new Position(this, x, y);
-            renderer = new Renderer(this, '#', 1, new Color(Color.Colors.White), false);
+            renderer = new Renderer(this, '#', 5, new Color(Color.Colors.White), false);
         }
 
         bool OnCollision(BaseObject baseObject)
