@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 
 namespace ConsoleRPG
 {
@@ -10,8 +11,8 @@ namespace ConsoleRPG
 
         public static void Display()
         {
+            Thread.Sleep(10);
             Console.Clear();
-            Console.ForegroundColor = ConsoleColor.White;
             Console.WriteLine(Properties.Resources.HelpText);
             Console.WriteLine("\n\nPress any button to return to main menu...");
             Console.ReadKey();

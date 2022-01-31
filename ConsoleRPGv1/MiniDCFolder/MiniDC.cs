@@ -19,28 +19,18 @@ namespace ConsoleRPG
 
         public static void PlayGame()
         {
-            MapGenerator mapGen = new MapGenerator();
-            Cell[,] mapCells = mapGen.GenerateMap();
+            Reset();
 
-            maps = new Map[] { mapGen.CellsToMap(mapGen.GenerateMap()), mapGen.CellsToMap(mapGen.GenerateMap()) };
-            //maps = new string[] { mapGen.CellsToMap(mapGen.GenerateMap()), mapGen.CellsToMap(mapGen.GenerateMap()), mapGen.CellsToMap(mapGen.GenerateMap()), mapGen.CellsToMap(mapGen.GenerateMap()) };
+            LoadMaps();
+            
             Console.CursorVisible = false;
             time = new Time();
 
-            Thread inputThread = new Thread(new ThreadStart(InputLoop));
-            inputThread.Start();
 
-
-            
+            StartInputThread();
 
             ShowStartMenu();
             Console.Clear();
-
-
-
-
-
-            //EndScreen.Display();
 
         }
 
@@ -84,6 +74,8 @@ namespace ConsoleRPG
 
                 StartLevel(currentLevel);
             }
+
+            EndScreen.Display();
 
         }
 
@@ -142,7 +134,6 @@ namespace ConsoleRPG
                 text[i] = text[i].Replace(" ", "");
             }
             char[,] charMap = new char[text.Length, text[0].Length];
-            //Cell[,] cellMap = new Cell[text.Length, text[0].Length];
             Map map = new Map(charMap.GetLength(1), charMap.GetLength(0));
 
 
@@ -187,7 +178,6 @@ namespace ConsoleRPG
                             break;
                     }
 
-                    //cellMap[j, i].objectInsideCell = objectInsideCell;
                 }
             }
 
@@ -217,13 +207,45 @@ namespace ConsoleRPG
 
         static void ShowStartMenu()
         {
+            Console.Clear();
+            StartMenu.LoadInputs();
             StartMenu.isShowing = true;
             while (StartMenu.isShowing)
             {
                 StartMenu.Display();
             }
-
+            StartMenu.Close();
             StartLevel(0);
+
+        }
+
+        static void StartInputThread()
+        {
+            if (InputHandler.thread == null || !InputHandler.thread.IsAlive)
+            {
+                Thread inputThread = new Thread(new ThreadStart(InputLoop));
+                inputThread.Start();
+
+                InputHandler.thread = inputThread;
+
+            }
+        }
+
+        static void LoadMaps()
+        {
+            MapGenerator mapGen = new MapGenerator();
+
+            maps = new Map[] { mapGen.CellsToMap(mapGen.GenerateMap()), mapGen.CellsToMap(mapGen.GenerateMap()) };
+        }
+
+        static void Reset()
+        {
+            player = null;
+            map = null;
+            startNextLevel = false;
+            currentLevel = 0;
+            gamePlaying = true;
+            InputHandler.ClearListeners();
 
         }
 

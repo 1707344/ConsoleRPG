@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 
 namespace ConsoleRPG
 {
@@ -11,10 +12,12 @@ namespace ConsoleRPG
         static List<KeyListener> listeners = new List<KeyListener>();
         static List<KeyListener> newListeners = new List<KeyListener>();
         static bool clearListeners = false;
+        public static Thread thread;//The thread InputHandler is running on
 
 
         public static void Update()
         {
+            
             //Add newListeners
 
 

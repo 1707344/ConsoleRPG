@@ -18,7 +18,7 @@ namespace ConsoleRPG
 
         float testStrength = 20;
 
-        //Starts false. Player clicks shoot button. Starts aiming(true). Then clicks again then fireball fires
+        //Starts false.   Player clicks shoot button. Starts aiming(true). Then clicks again then fireball fires
         public bool fireballAim;
         public bool fireballAimSwitch;
         Cooldown fireballAimFlashCooldown;
@@ -124,9 +124,9 @@ namespace ConsoleRPG
         public bool OnDeath()
         {
             Console.Clear();
-            Console.WriteLine("You DIED \nPress any key to exit...");
-            Console.ReadKey(true);
-            Environment.Exit(0);
+            MiniDC.gamePlaying = false;
+            RetryScreen.Display();
+            //Environment.Exit(0);
             return true;
         }
         void HealthCheck()

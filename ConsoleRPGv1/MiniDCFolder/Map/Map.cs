@@ -84,6 +84,10 @@ namespace ConsoleRPG
 
         public void Display()
         {
+            positions.Sort(delegate (Position position1, Position position2)
+            {
+                return position1.x.CompareTo(position1.x);
+            });
             ConsoleHandler.ClearConsoleCharacters();
 
             if (!testBool)
