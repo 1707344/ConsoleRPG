@@ -8,6 +8,14 @@ namespace ConsoleRPG
 {
     class MapGenerator
     {
+        struct WallSections
+        {
+            int x;
+            int y;
+            int length;
+            Movement.Direction direction;
+        }
+
         /// <summary>
         /// Thanks https://en.wikipedia.org/wiki/Maze_generation_algorithm
         /// </summary>
@@ -130,12 +138,38 @@ namespace ConsoleRPG
                 }
             }
 
-            int numOfEnemies = 20;
+            //AddBasicEnemies(emptySpaces, map);
+
+            //Find All walls
+            bool[,] walls = new bool[map.width,map.height];//if true is a wall, false if not
+
+            for (int x = 0; x < map.width; x++)
+            {
+                for (int y = 0; y < map.height; y++)
+                {
+                    if (!map.GetObjectsAtPosition(x, y).Exists(x => x.obj.GetType() == typeof(Wall)))
+                    {
+                        walls[x, y] = true;
+                    }
+                    else
+                    {
+                        walls[x, y] = false;
+                    }
+                }
+            }
+
+
             
 
+        }
+        void AddBasicEnemies(List<Position> emptySpaces, Map map)
+        {
+            int numOfEnemies = 0;
+
+
             for (int i = 0; i < numOfEnemies; i++)
-            {   
-                if(emptySpaces.Count <= 1)
+            {
+                if (emptySpaces.Count <= 1)
                 {
                     break;
                 }
@@ -156,6 +190,7 @@ namespace ConsoleRPG
             }
 
         }
+
         void AddCornerPieces(char[,] charMap)
         {
             for (int x = 0; x < charMap.GetLength(0); x += 2)
