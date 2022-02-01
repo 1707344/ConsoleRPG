@@ -8,12 +8,20 @@ namespace ConsoleRPG
 {
     class MapGenerator
     {
-        struct WallSections
+        struct WallSection
         {
-            int x;
-            int y;
-            int length;
-            Movement.Direction direction;
+            public int x;
+            public int y;
+            public int length;
+            public Movement.Direction direction;
+
+            public WallSection(int x, int y, int length, Movement.Direction direction)
+            {
+                this.x = x;
+                this.y = y;
+                this.length = length;
+                this.direction = direction;
+            }
         }
 
         /// <summary>
@@ -130,10 +138,10 @@ namespace ConsoleRPG
             {
                 for (int y = 5; y < map.height; y++)
                 {
-                    Position position = map.GetObjectsAtPosition(x, y)[0];
+                    Position position4 = map.GetObjectsAtPosition(x, y)[0];
                     if (!map.GetObjectsAtPosition(x, y).Exists(x => x.obj.GetType() == typeof(Wall)))
                     {
-                        emptySpaces.Add(position);
+                        emptySpaces.Add(position4);
                     }
                 }
             }
@@ -143,24 +151,284 @@ namespace ConsoleRPG
             //Find All walls
             bool[,] walls = new bool[map.width,map.height];//if true is a wall, false if not
 
-            for (int x = 0; x < map.width; x++)
+
+
+
+            for (int x = 1; x < map.width - 1; x++)
             {
-                for (int y = 0; y < map.height; y++)
+                for (int y = 1; y < map.height - 1; y++)
                 {
-                    if (!map.GetObjectsAtPosition(x, y).Exists(x => x.obj.GetType() == typeof(Wall)))
+                    if (map.GetObjectsAtPosition(x, y).Exists(x => x.obj.GetType() == typeof(Wall)))
                     {
                         walls[x, y] = true;
                     }
                     else
                     {
-                        walls[x, y] = false;
+                        walls[x , y] = false;
                     }
                 }
             }
 
 
-            
+            List<WallSection> wallSections = new List<WallSection>();
+            SetWallSections(wallSections, walls, map);
 
+            wallSections.Sort((WallSection a, WallSection b) => b.length.CompareTo(a.length));
+
+            WallSection wallSection = wallSections[0];
+            (int x, int y) offset = (0, 0);
+            (int x, int y) position = (wallSection.x, wallSection.y);
+
+            switch (wallSection.direction)
+            {
+                case Movement.Direction.North:
+                    offset = (0, -1);
+                    break;
+                case Movement.Direction.East:
+                    offset = (1, 0);
+                    break;
+                case Movement.Direction.South:
+                    offset = (0, -1);
+                    break;
+                case Movement.Direction.West:
+                    offset = (-1, 0);
+                    break;
+            }
+            (int x, int y) startOffset = wallSection.direction == Movement.Direction.North || wallSection.direction == Movement.Direction.South ? (-1, 0) : (0, 1);
+
+
+            position = (position.x + startOffset.x, position.y + startOffset.y);
+
+            for (int i = 0; i < wallSection.length; i++)
+            {
+                if(position.x == 0 || position.x >= map.width 
+                    || position.y == 0 || position.y >= map.height)
+                {
+                    continue;
+                }
+
+                Position wall = map.GetObjectsAtPosition(position.x, position.y).Find(x => x.obj.GetType() == typeof(Wall));
+                if(wall != null)
+                {
+                    wall.obj.destroy = true;
+                }
+
+
+                Position pos = map.GetObjectsAtPosition(position.x, position.y).Find(x => x.obj.GetComponent<Renderer>() != null);
+                if(pos != null)
+                {
+                    pos.obj.GetComponent<Renderer>().color = new Color(100, 200, 200);
+                }
+                position = (position.x + offset.x, position.y + offset.y);
+            }
+        }
+        void GetWallsAround(bool[] wallsAround, bool[,] walls, int x, int y)
+        {
+            try
+            {
+                wallsAround[0] = walls[x, y - 1];
+            }
+            catch
+            {
+                wallsAround[0] = false;
+            }
+            try
+            {
+                wallsAround[1] = walls[x + 1, y];
+            }
+            catch
+            {
+                wallsAround[1] = false;
+            }
+            try
+            {
+                wallsAround[2] = walls[x, y + 1];
+            }
+            catch
+            {
+                wallsAround[2] = false;
+            }
+            try
+            {
+                wallsAround[3] = walls[x - 1, y];
+            }
+            catch
+            {
+                wallsAround[3] = false;
+            }
+
+        }
+        void SetWallSections(List<WallSection> wallSections, bool[,] walls, Map map)
+        {
+            List<(int x, int y)> wallsToIgnore = new List<(int x, int y)>();
+
+            for (int x = 0; x < walls.GetLength(0); x++)
+            {
+                for (int y = 0; y < walls.GetLength(1); y++)
+                {
+
+                    
+
+
+                    bool currentWall = walls[x, y];
+                    bool[] wallsAround = new bool[4];
+                    if (currentWall)
+                    {
+                        GetWallsAround(wallsAround, walls, x, y);
+                        //If north and south are true or east and west are true then it is a middle piece
+                        if ((wallsAround[0] && wallsAround[2]) || (wallsAround[1] && wallsAround[3])
+                            || wallsToIgnore.Exists(wall => wall.x == x && wall.y == y))
+                        {
+                            continue;
+                        }
+                        else if ((wallsAround[0] && wallsAround[1]) ||
+                            (wallsAround[1] && wallsAround[2]) ||
+                            (wallsAround[2] && wallsAround[3]) ||
+                            (wallsAround[3] && wallsAround[0])) // If two adjacent walls then it is a corner and both directions need to be checked
+                        {
+
+                            (int x, int y) position = (x, y);
+                            (int x, int y)[] offset = new (int x, int y)[2] { (0, 0), (0, 0) };
+                            int[] dir = new int[2] { -1, -1 };
+                            for (int i = 0; i < wallsAround.Length; i++)
+                            {
+                                if (wallsAround[i])
+                                {
+                                    if (dir[0] == -1)
+                                    {
+                                        dir[0] = i;
+                                    }
+                                    else if (dir[1] == -1)
+                                    {
+                                        dir[1] = i;
+                                    }
+                                    else
+                                    {
+                                        break;
+                                    }
+                                }
+                            }
+                            //If there are no walls around continue
+                            if (dir[0] == -1 || dir[1] == -1)
+                            {
+                                continue;
+                            }
+
+                            for (int i = 0; i < dir.Length; i++)
+                            {
+                                switch (dir[i])
+                                {
+                                    case 0:
+                                        offset[i] = (0, -1);
+                                        break;
+                                    case 1:
+                                        offset[i] = (1, 0);
+                                        break;
+                                    case 2:
+                                        offset[i] = (0, 1);
+                                        break;
+                                    case 3:
+                                        offset[i] = (-1, 0);
+                                        break;
+                                }
+
+                            }
+
+                            for (int i = 0; i < dir.Length; i++)
+                            {
+
+                                position = (x, y);
+
+                                wallsToIgnore.Add((position.x, position.y));
+                                while (true)
+                                {
+                                    position = (offset[i].x + position.x, offset[i].y + position.y);
+                                    bool nextWall;
+                                    try
+                                    {
+                                        nextWall = walls[position.x, position.y];
+                                    }
+                                    catch
+                                    {
+                                        break;
+                                    }
+
+                                    if (!nextWall)
+                                    {
+                                        break;
+                                    }
+
+                                    wallsToIgnore.Add((position.x, position.y));
+                                }
+
+                                int length = MathF.Abs(position.x - x) > MathF.Abs(position.y - y) ? (int)MathF.Abs(position.x - x) : (int)MathF.Abs(position.y - y);
+                                wallSections.Add(new WallSection(x, y, length, (Movement.Direction)dir[i]));
+                            }
+
+                        }
+                        else
+                        {
+                            (int x, int y) position = (x, y);
+                            (int x, int y) offset = (0, 0);
+                            int dir = -1;
+                            for (int i = 0; i < wallsAround.Length; i++)
+                            {
+                                if (wallsAround[i])
+                                {
+                                    dir = i;
+                                    break;
+                                }
+                            }
+                            //If there are no walls around continue
+                            if (dir == -1)
+                            {
+                                continue;
+                            }
+
+                            switch (dir)
+                            {
+                                case 0:
+                                    offset = (0, -1);
+                                    break;
+                                case 1:
+                                    offset = (1, 0);
+                                    break;
+                                case 2:
+                                    offset = (0, 1);
+                                    break;
+                                case 3:
+                                    offset = (-1, 0);
+                                    break;
+                            }
+
+                            while (true)
+                            {
+                                position = (offset.x + position.x, offset.y + position.y);
+                                bool nextWall;
+                                try
+                                {
+                                    nextWall = walls[position.x, position.y];
+                                }
+                                catch
+                                {
+                                    break;
+                                }
+
+                                if (!nextWall)
+                                {
+                                    break;
+                                }
+
+                                wallsToIgnore.Add((position.x, position.y));
+                            }
+
+                            int length = MathF.Abs(position.x - x) > MathF.Abs(position.y - y) ? (int)MathF.Abs(position.x - x) : (int)MathF.Abs(position.y - y);
+                            wallSections.Add(new WallSection(x, y, length, (Movement.Direction)dir));
+
+                        }
+                    }
+                }
+            }
         }
         void AddBasicEnemies(List<Position> emptySpaces, Map map)
         {
@@ -306,13 +574,13 @@ namespace ConsoleRPG
             switch (direction)
             {
                 case 0:
-                    return (-1, 0);
-                case 1:
-                    return (0, 1);
-                case 2:
-                    return (1, 0);
-                case 3:
                     return (0, -1);
+                case 1:
+                    return (1, 0);
+                case 2:
+                    return (0, 1);
+                case 3:
+                    return (-1, 0);
                 default:
                     return (0, 0);
             }
