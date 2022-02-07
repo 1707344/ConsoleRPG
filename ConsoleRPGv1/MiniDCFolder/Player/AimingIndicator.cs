@@ -2,7 +2,7 @@
 {
     class AimingIndicator : BaseObject
     {
-        Renderer renderer;
+        public Renderer renderer;
         public Position position;
         public Movement.Direction direction;
         public AimingIndicator(Map map, int x, int y, Movement.Direction direction) : base(map)

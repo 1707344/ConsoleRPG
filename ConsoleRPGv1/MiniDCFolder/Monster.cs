@@ -26,7 +26,7 @@ namespace ConsoleRPG
 
             collider = new Collider(this, OnCollision);
             health = new Health(this, 2, OnDeath);
-            renderer = new Renderer(this, '@', 2, new Color(255, 43, 43), false);
+            renderer = new Renderer(this, 'Θ', 2, new Color(255, 43, 43), false);
             position = new Position(this, x, y);
             movement = new Movement(this);
             pathFinder = new PathFinder(this, 100);

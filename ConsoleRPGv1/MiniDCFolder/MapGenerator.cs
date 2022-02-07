@@ -146,14 +146,21 @@ namespace ConsoleRPG
                 }
             }
 
-            //AddBasicEnemies(emptySpaces, map);
 
+
+
+            AddSnipers(map);
+            AddBasicEnemies(emptySpaces, map);
+        }
+
+        void AddSnipers(Map map)
+        {
             //Find All walls
-            bool[,] walls = new bool[map.width,map.height];//if true is a wall, false if not
+            bool[,] walls = new bool[map.width, map.height];//if true is a wall, false if not
 
 
 
-
+            //Set up walls array
             for (int x = 1; x < map.width - 1; x++)
             {
                 for (int y = 1; y < map.height - 1; y++)
@@ -164,7 +171,7 @@ namespace ConsoleRPG
                     }
                     else
                     {
-                        walls[x , y] = false;
+                        walls[x, y] = false;
                     }
                 }
             }
@@ -188,7 +195,7 @@ namespace ConsoleRPG
                     offset = (1, 0);
                     break;
                 case Movement.Direction.South:
-                    offset = (0, -1);
+                    offset = (0, 1);
                     break;
                 case Movement.Direction.West:
                     offset = (-1, 0);
@@ -201,26 +208,25 @@ namespace ConsoleRPG
 
             for (int i = 0; i < wallSection.length; i++)
             {
-                if(position.x == 0 || position.x >= map.width 
+                if (position.x == 0 || position.x >= map.width
                     || position.y == 0 || position.y >= map.height)
                 {
                     continue;
                 }
 
                 Position wall = map.GetObjectsAtPosition(position.x, position.y).Find(x => x.obj.GetType() == typeof(Wall));
-                if(wall != null)
+                if (wall != null)
                 {
                     wall.obj.destroy = true;
                 }
 
 
-                Position pos = map.GetObjectsAtPosition(position.x, position.y).Find(x => x.obj.GetComponent<Renderer>() != null);
-                if(pos != null)
-                {
-                    pos.obj.GetComponent<Renderer>().color = new Color(100, 200, 200);
-                }
                 position = (position.x + offset.x, position.y + offset.y);
             }
+
+            (int x, int y) position1 = (wallSection.x + startOffset.x, wallSection.y + startOffset.y);
+            (int x, int y) position2 = (position.x - offset.x, position.y - offset.y);
+            Sniper sniper = new Sniper(map, position1.x, position1.y, new PatrolPoint[] { new PatrolPoint(map, position1.x, position1.y), new PatrolPoint(map, position2.x, position2.y) });
         }
         void GetWallsAround(bool[] wallsAround, bool[,] walls, int x, int y)
         {
@@ -432,7 +438,7 @@ namespace ConsoleRPG
         }
         void AddBasicEnemies(List<Position> emptySpaces, Map map)
         {
-            int numOfEnemies = 0;
+            int numOfEnemies = 5;
 
 
             for (int i = 0; i < numOfEnemies; i++)
