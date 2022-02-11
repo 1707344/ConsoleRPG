@@ -12,7 +12,7 @@
     public class Renderer : Component
     {
         public Color color;
-        char icon;
+        public char icon;
         /// <summary>
         /// If true the icon will not be rendered and only the color as a backround will. 
         /// If false the icon will be rendered with the color as the text color.

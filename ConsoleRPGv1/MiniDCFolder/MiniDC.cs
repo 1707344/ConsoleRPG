@@ -235,7 +235,7 @@ namespace ConsoleRPG
         {
             MapGenerator mapGen = new MapGenerator();
 
-            maps = new Map[] { mapGen.CellsToMap(mapGen.GenerateMap()), mapGen.CellsToMap(mapGen.GenerateMap()) };
+            maps = new Map[] { mapGen.CellsToMap(mapGen.GenerateMap(), 0), mapGen.CellsToMap(mapGen.GenerateMap(), 1) };
         }
 
         static void Reset()

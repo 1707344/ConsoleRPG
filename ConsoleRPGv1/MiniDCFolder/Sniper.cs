@@ -8,6 +8,7 @@ namespace ConsoleRPG
 {
     class Sniper: BaseObject
     {
+        Dictionary<Movement.Direction, char> laserChar;
         Renderer renderer;
         Position position;
         Collider collider;
@@ -16,11 +17,19 @@ namespace ConsoleRPG
         PathFinder pathFinder;
         Patrol patrol;
         Cooldown movementCooldown;
+        Cooldown shootStartupCooldown;//How long the indicators will be there/how long until it does damage
+        Cooldown shootingTime;//How long the laser is active
         List<AimingIndicator> indicators;
         Color indicatorColor;
         bool isIndicatorColorIncreasing;
 
         bool isShooting = false;
+        bool isLaserActivated = false;
+
+        Movement.Direction shootingDirection = Movement.Direction.None;
+
+        float laserDamage = 0.5f;
+
         public Sniper(Map map, int x, int y, PatrolPoint[] patrolPoints): base(map)
         {
             collider = new Collider(this, OnCollision);
@@ -33,6 +42,15 @@ namespace ConsoleRPG
             pathFinder = new PathFinder(this, 100);
 
             indicatorColor = new Color(255, 0, 0);
+
+            shootStartupCooldown = new Cooldown(800);
+            shootingTime = new Cooldown(400);
+
+            laserChar = new Dictionary<Movement.Direction, char>(4);
+            laserChar.Add(Movement.Direction.North, '║');
+            laserChar.Add(Movement.Direction.South, '║');
+            laserChar.Add(Movement.Direction.East, '═');
+            laserChar.Add(Movement.Direction.West, '═');
         }
 
         public override void Update()
@@ -41,38 +59,48 @@ namespace ConsoleRPG
 
             if (isShooting)
             {
-                if (isIndicatorColorIncreasing)
-                {
-                    indicatorColor.r += 5;
-                }
-                else
-                {
-                    indicatorColor.r -= 5;
-                }
-
-                if(indicatorColor.r <= 50)
-                {
-                    isIndicatorColorIncreasing = true;
-                    indicatorColor.r = 50;
-                }else if(indicatorColor.r >= 255)
-                {
-                    isIndicatorColorIncreasing = false;
-                    indicatorColor.r = 255;
-                }
-
                 
 
-
-                foreach(Renderer renderer in indicators.ConvertAll(x => x.GetComponent<Renderer>()))
+                if (shootStartupCooldown.IsCooldownDone() && !isLaserActivated)
                 {
-                    renderer.color = indicatorColor;
+                    foreach (Renderer indicatorRenderer in indicators.ConvertAll(x => x.renderer))
+                    {
+                        indicatorRenderer.icon = laserChar[shootingDirection];
+                        indicatorRenderer.color = new Color(255, 100, 0);
+                    }
+
+                    shootingTime.StartCooldown();
+
+                    isLaserActivated = true;
+                    
                 }
+                else if(!isLaserActivated)
+                {
+                    IndicatorColorPulse();
+                }
+
+                if (isLaserActivated)
+                {
+                    LaserHurt();
+                }
+
+                if (shootingTime.IsCooldownDone() && isLaserActivated)
+                {
+                    isShooting = false;
+                    isLaserActivated = false;
+                    foreach (AimingIndicator aimingIndicator in indicators)
+                    {
+                        aimingIndicator.destroy = true;
+                    }
+                }
+
                 return;
             }
 
             if (CheckForPlayer())
             {
                 CreateIndicators();
+                shootStartupCooldown.StartCooldown();
                 isShooting = true;
                 return;
             }
@@ -97,26 +125,51 @@ namespace ConsoleRPG
             return false;
         }
 
+        void LaserHurt()
+        {
+            Map map = GetMap();
+            foreach(Position aimingIndicatorPos in indicators.ConvertAll(x => x.position))
+            {
+                List<Health> healthsAtPosition = map.GetObjectsAtPosition(aimingIndicatorPos.x, aimingIndicatorPos.y).FindAll(x => x.obj.GetComponent<Health>() != null).ConvertAll(x => x.obj.GetComponent<Health>());
+
+
+                foreach(Health health in healthsAtPosition)
+                {
+                    health.health -= laserDamage;
+                    new LaserHitIndicator(map, aimingIndicatorPos.x, aimingIndicatorPos.y);
+                }
+                
+            }
+        }
+
         void CreateIndicators()
         {
+
+
+            shootingDirection = Movement.Direction.None;
+
             indicators = new List<AimingIndicator>();
             Position playerPosition = MiniDC.player.GetComponent<Position>();
             (int x, int y) offset = (0, 0);
             if(playerPosition.x > position.x)
             {
                 offset = (1, 0);
+                shootingDirection = Movement.Direction.East;
             }
             if(playerPosition.x < position.x)
             {
                 offset = (-1, 0);
+                shootingDirection = Movement.Direction.West;
             }
             if(playerPosition.y > position.y)
             {
                 offset = (0, 1);
+                shootingDirection = Movement.Direction.South;
             }
             if(playerPosition.y < position.y)
             {
                 offset = (0, -1);
+                shootingDirection = Movement.Direction.North;
             }
 
             (int x, int y) loopPosition = (position.x, position.y);
@@ -126,8 +179,36 @@ namespace ConsoleRPG
             {
                 loopPosition = (loopPosition.x + offset.x, loopPosition.y + offset.y);
                 AimingIndicator indicator = new AimingIndicator(GetMap(), loopPosition.x, loopPosition.y, Movement.Direction.None);
-                indicator.renderer.layer = 0;
                 indicators.Add(indicator);
+            }
+        }
+
+        void IndicatorColorPulse()
+        {
+            if (isIndicatorColorIncreasing)
+            {
+                indicatorColor.r += 5;
+            }
+            else
+            {
+                indicatorColor.r -= 5;
+            }
+
+            if (indicatorColor.r <= 50)
+            {
+                isIndicatorColorIncreasing = true;
+                indicatorColor.r = 50;
+            }
+            else if (indicatorColor.r >= 255)
+            {
+                isIndicatorColorIncreasing = false;
+                indicatorColor.r = 255;
+            }
+
+
+            foreach (Renderer renderer in indicators.ConvertAll(x => x.GetComponent<Renderer>()))
+            {
+                renderer.color = indicatorColor;
             }
         }
 
@@ -147,11 +228,41 @@ namespace ConsoleRPG
 
         public bool OnDeath()
         {
+            destroy = true;
             return true;
         }
         public bool OnCollision(BaseObject baseObject)
         {
             return true;
         }
+    }
+
+    /// <summary>
+    /// Visually a way to inform the player that something is being hit by laser
+    /// </summary>
+    class LaserHitIndicator : BaseObject
+    {
+        Position position;
+        Renderer renderer;
+        Cooldown duration;
+        public LaserHitIndicator(Map map, int x, int y) : base(map)
+        {
+            position = new Position(this, x, y);
+            renderer = new Renderer(this, ' ', 10, new Color(255, 100, 0, 0.6f), true);
+            duration = new Cooldown(300);
+
+            duration.StartCooldown();
+        }
+
+        public override void Update()
+        {
+            base.Update();
+
+            if (duration.IsCooldownDone())
+            {
+                destroy = true;
+            }
+        }
+
     }
 }

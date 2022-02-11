@@ -107,7 +107,7 @@ namespace ConsoleRPG
         /// Converts a cell array to a string
         /// </summary>
         /// <returns></returns>
-        public Map CellsToMap(Cell[,] cells)
+        public Map CellsToMap(Cell[,] cells, int difficulty)
         {
             char[,] charMap = CellsToCharArr(cells);
 
@@ -117,7 +117,7 @@ namespace ConsoleRPG
             Map map = CharArrToMap(charMap);
 
             //Adding player and enemies and stuff
-            AddObjects(map);
+            AddObjects(map, difficulty);
             
 
             return map;
@@ -126,7 +126,7 @@ namespace ConsoleRPG
         /// Adds objects like the player and the enemies
         /// </summary>
         /// <param name="charMap"></param>
-        void AddObjects(Map map)
+        void AddObjects(Map map, int difficulty)
         {
             //charMap[1, 1] = 'P';
             new Stairs(map, map.width - 2, map.height - 2);
@@ -148,8 +148,12 @@ namespace ConsoleRPG
 
 
 
+            if (difficulty > 0)
+            {
+                AddSnipers(map);
+            }
 
-            AddSnipers(map);
+
             AddBasicEnemies(emptySpaces, map);
         }
 
@@ -180,6 +184,9 @@ namespace ConsoleRPG
             List<WallSection> wallSections = new List<WallSection>();
             SetWallSections(wallSections, walls, map);
 
+            float minDistAwayFromPlayer = 4;
+
+            wallSections.RemoveAll(section => MathF.Sqrt(MathF.Pow(0 - section.x, 2) + MathF.Pow(0 - section.y, 2)) < minDistAwayFromPlayer);
             wallSections.Sort((WallSection a, WallSection b) => b.length.CompareTo(a.length));
 
             WallSection wallSection = wallSections[0];
