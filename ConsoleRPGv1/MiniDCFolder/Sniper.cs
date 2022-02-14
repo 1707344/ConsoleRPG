@@ -34,17 +34,21 @@ namespace ConsoleRPG
 
         public Sniper(Map map, int x, int y, PatrolPoint[] patrolPoints): base(map)
         {
+            //Components
             collider = new Collider(this, OnCollision);
             health = new Health(this, 2, OnDeath);
             renderer = new Renderer(this, 'ô', 2, new Color(255, 200, 43), false);
             position = new Position(this, x, y);
-            patrol = new Patrol(patrolPoints);
-            movementCooldown = new Cooldown(400);
             movement = new Movement(this);
             pathFinder = new PathFinder(this, 100);
 
+
+            patrol = new Patrol(patrolPoints);
+
             indicatorColor = new Color(255, 0, 0);
 
+            //Cooldowns
+            movementCooldown = new Cooldown(400);
             shootStartupCooldown = new Cooldown(800);
             shootingTime = new Cooldown(400);
             startingCooldown = new Cooldown(500);

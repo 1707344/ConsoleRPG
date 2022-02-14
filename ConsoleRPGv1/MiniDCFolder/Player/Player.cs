@@ -4,6 +4,8 @@ namespace ConsoleRPG
 {
     public class Player : BaseObject
     {
+        Freezable freezable;
+
         Renderer renderer;
         Position position;
         Movement movement;
@@ -32,6 +34,8 @@ namespace ConsoleRPG
 
         public Player(Map map, int x, int y) : base(map)
         {
+            freezable = new Freezable(this);
+
 
             baseColor = new Color(92, 255, 133, 0.99f);
             fireballAimFlashColor1 = new Color(255, 100, 50, 0.99f);
@@ -48,7 +52,6 @@ namespace ConsoleRPG
 
             GetMap().addingObjecsFuncs.Add(SpawnIndicator);
 
-            //InputHandler.AddListener(new KeyListener(Test, ConsoleKey.B));
         }
 
         public void LoadInput()
@@ -112,13 +115,6 @@ namespace ConsoleRPG
         }
         public bool OnCollision(BaseObject baseObject)
         {
-            if (baseObject.GetType().Name == "Monster")
-            {
-                //ConsoleHandler.StartFlashScreen(ConsoleColor.DarkRed, 5);
-                //health.health--;
-                //HealthCheck();
-
-            }
             return true;
         }
         public bool OnDeath()
@@ -126,7 +122,7 @@ namespace ConsoleRPG
             Console.Clear();
             MiniDC.gamePlaying = false;
             RetryScreen.Display();
-            //Environment.Exit(0);
+
             return true;
         }
         void HealthCheck()
@@ -167,15 +163,6 @@ namespace ConsoleRPG
 
         public bool MoveUp()
         {
-            if (fireballAim)
-            {
-                //aimingIndicator.SetPosition(position.x, position.y - 1);
-                //aimingIndicator.direction = Movement.Direction.North;
-            }
-            else
-            {
-
-            }
             if (movement.Move(Movement.Direction.North))
             {
                 aimingIndicator.position.y -= 1;
@@ -186,16 +173,6 @@ namespace ConsoleRPG
         }
         public bool MoveDown()
         {
-            if (fireballAim)
-            {
-                //aimingIndicator.SetPosition(position.x, position.y + 1);
-                //aimingIndicator.direction = Movement.Direction.South;
-
-            }
-            else
-            {
-
-            }
             if (movement.Move(Movement.Direction.South))
             {
                 aimingIndicator.position.y += 1;
@@ -205,16 +182,6 @@ namespace ConsoleRPG
         }
         public bool MoveLeft()
         {
-            if (fireballAim)
-            {
-                //aimingIndicator.SetPosition(position.x - 1, position.y);
-                //aimingIndicator.direction = Movement.Direction.West;
-
-            }
-            else
-            {
-
-            }
             if (movement.Move(Movement.Direction.West))
             {
                 aimingIndicator.position.x -= 1;
@@ -224,16 +191,6 @@ namespace ConsoleRPG
         }
         public bool MoveRight()
         {
-            if (fireballAim)
-            {
-                //aimingIndicator.SetPosition(position.x + 1, position.y);
-                //aimingIndicator.direction = Movement.Direction.East;
-
-            }
-            else
-            {
-
-            }
             if (movement.Move(Movement.Direction.East))
             {
                 aimingIndicator.position.x += 1;
@@ -255,20 +212,6 @@ namespace ConsoleRPG
 
         public bool ShootFireball()
         {
-            if (!fireballAim)
-            {
-                //fireballAim = true;
-
-
-            }
-            else
-            {
-                //fireballAim = false;
-                //aimingIndicator.destroy = true;
-
-
-            }
-
             if (!GetMap().GetObjectsAtPosition(aimingIndicator.position.x, aimingIndicator.position.y).Exists(x => x.obj.GetType() == typeof(Wall)))
             {
                 GetMap().addingObjecsFuncs.Add(SpawnFireball);

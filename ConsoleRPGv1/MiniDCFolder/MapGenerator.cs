@@ -147,6 +147,10 @@ namespace ConsoleRPG
             }
 
 
+            if(difficulty == -1)
+            {
+                return;
+            }
 
             if (difficulty > 0)
             {

@@ -2,7 +2,7 @@
 {
     /// <summary>
     /// Components will be attached to baseObjects. 
-    /// Components give baseObjects functionallity that can be shared among baseObjects.
+    /// Components give baseObjects functionality that can be shared among baseObjects.
     /// For example the Renderer and Collider are both Components.
     /// </summary>
     public abstract class Component
