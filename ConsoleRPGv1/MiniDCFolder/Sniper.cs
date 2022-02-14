@@ -19,6 +19,8 @@ namespace ConsoleRPG
         Cooldown movementCooldown;
         Cooldown shootStartupCooldown;//How long the indicators will be there/how long until it does damage
         Cooldown shootingTime;//How long the laser is active
+        Cooldown startingCooldown;
+        bool startingCooldownStarted;
         List<AimingIndicator> indicators;
         Color indicatorColor;
         bool isIndicatorColorIncreasing;
@@ -45,17 +47,25 @@ namespace ConsoleRPG
 
             shootStartupCooldown = new Cooldown(800);
             shootingTime = new Cooldown(400);
+            startingCooldown = new Cooldown(500);
 
             laserChar = new Dictionary<Movement.Direction, char>(4);
             laserChar.Add(Movement.Direction.North, '║');
             laserChar.Add(Movement.Direction.South, '║');
             laserChar.Add(Movement.Direction.East, '═');
             laserChar.Add(Movement.Direction.West, '═');
+
+            startingCooldownStarted = false;
         }
 
         public override void Update()
         {
             base.Update();
+            if (!startingCooldownStarted)
+            {
+                startingCooldown.StartCooldown();
+                startingCooldownStarted = true;
+            }
 
             if (isShooting)
             {
@@ -97,7 +107,7 @@ namespace ConsoleRPG
                 return;
             }
 
-            if (CheckForPlayer())
+            if (CheckForPlayer() && startingCooldown.IsCooldownDone())
             {
                 CreateIndicators();
                 shootStartupCooldown.StartCooldown();
@@ -182,7 +192,18 @@ namespace ConsoleRPG
                 indicators.Add(indicator);
             }
         }
+        void DestroyIndicators()
+        {
+            if(indicators == null)
+            {
+                return;
+            }
 
+            foreach(AimingIndicator aimingIndicator in indicators)
+            {
+                aimingIndicator.destroy = true;
+            }
+        }
         void IndicatorColorPulse()
         {
             if (isIndicatorColorIncreasing)
@@ -228,6 +249,7 @@ namespace ConsoleRPG
 
         public bool OnDeath()
         {
+            DestroyIndicators();
             destroy = true;
             return true;
         }

@@ -150,14 +150,14 @@ namespace ConsoleRPG
 
             if (difficulty > 0)
             {
-                AddSnipers(map);
+                AddSnipers(map, difficulty);
             }
 
 
-            AddBasicEnemies(emptySpaces, map);
+            AddBasicEnemies(emptySpaces, map, difficulty + 5);
         }
 
-        void AddSnipers(Map map)
+        void AddSnipers(Map map, int numOfSnipers)
         {
             //Find All walls
             bool[,] walls = new bool[map.width, map.height];//if true is a wall, false if not
@@ -184,56 +184,62 @@ namespace ConsoleRPG
             List<WallSection> wallSections = new List<WallSection>();
             SetWallSections(wallSections, walls, map);
 
-            float minDistAwayFromPlayer = 4;
+            float minDistAwayFromPlayer = 8;
 
             wallSections.RemoveAll(section => MathF.Sqrt(MathF.Pow(0 - section.x, 2) + MathF.Pow(0 - section.y, 2)) < minDistAwayFromPlayer);
             wallSections.Sort((WallSection a, WallSection b) => b.length.CompareTo(a.length));
 
-            WallSection wallSection = wallSections[0];
-            (int x, int y) offset = (0, 0);
-            (int x, int y) position = (wallSection.x, wallSection.y);
-
-            switch (wallSection.direction)
+            for (int i = 0; i < numOfSnipers; i++)
             {
-                case Movement.Direction.North:
-                    offset = (0, -1);
-                    break;
-                case Movement.Direction.East:
-                    offset = (1, 0);
-                    break;
-                case Movement.Direction.South:
-                    offset = (0, 1);
-                    break;
-                case Movement.Direction.West:
-                    offset = (-1, 0);
-                    break;
-            }
-            (int x, int y) startOffset = wallSection.direction == Movement.Direction.North || wallSection.direction == Movement.Direction.South ? (-1, 0) : (0, 1);
+                WallSection wallSection = wallSections[0];
+                (int x, int y) offset = (0, 0);
+                (int x, int y) position = (wallSection.x, wallSection.y);
 
-
-            position = (position.x + startOffset.x, position.y + startOffset.y);
-
-            for (int i = 0; i < wallSection.length; i++)
-            {
-                if (position.x == 0 || position.x >= map.width
-                    || position.y == 0 || position.y >= map.height)
+                switch (wallSection.direction)
                 {
-                    continue;
+                    case Movement.Direction.North:
+                        offset = (0, -1);
+                        break;
+                    case Movement.Direction.East:
+                        offset = (1, 0);
+                        break;
+                    case Movement.Direction.South:
+                        offset = (0, 1);
+                        break;
+                    case Movement.Direction.West:
+                        offset = (-1, 0);
+                        break;
+                }
+                (int x, int y) startOffset = wallSection.direction == Movement.Direction.North || wallSection.direction == Movement.Direction.South ? (-1, 0) : (0, 1);
+
+
+                position = (position.x + startOffset.x, position.y + startOffset.y);
+
+                for (int j = 0; j < wallSection.length; j++)
+                {
+                    if (position.x == 0 || position.x >= map.width
+                        || position.y == 0 || position.y >= map.height)
+                    {
+                        continue;
+                    }
+
+                    Position wall = map.GetObjectsAtPosition(position.x, position.y).Find(x => x.obj.GetType() == typeof(Wall));
+                    if (wall != null)
+                    {
+                        wall.obj.destroy = true;
+                    }
+
+
+                    position = (position.x + offset.x, position.y + offset.y);
                 }
 
-                Position wall = map.GetObjectsAtPosition(position.x, position.y).Find(x => x.obj.GetType() == typeof(Wall));
-                if (wall != null)
-                {
-                    wall.obj.destroy = true;
-                }
+                (int x, int y) position1 = (wallSection.x + startOffset.x, wallSection.y + startOffset.y);
+                (int x, int y) position2 = (position.x - offset.x, position.y - offset.y);
+                Sniper sniper = new Sniper(map, position1.x, position1.y, new PatrolPoint[] { new PatrolPoint(map, position1.x, position1.y), new PatrolPoint(map, position2.x, position2.y) });
 
-
-                position = (position.x + offset.x, position.y + offset.y);
+                wallSections.Remove(wallSection);
             }
-
-            (int x, int y) position1 = (wallSection.x + startOffset.x, wallSection.y + startOffset.y);
-            (int x, int y) position2 = (position.x - offset.x, position.y - offset.y);
-            Sniper sniper = new Sniper(map, position1.x, position1.y, new PatrolPoint[] { new PatrolPoint(map, position1.x, position1.y), new PatrolPoint(map, position2.x, position2.y) });
+            
         }
         void GetWallsAround(bool[] wallsAround, bool[,] walls, int x, int y)
         {
@@ -443,9 +449,8 @@ namespace ConsoleRPG
                 }
             }
         }
-        void AddBasicEnemies(List<Position> emptySpaces, Map map)
+        void AddBasicEnemies(List<Position> emptySpaces, Map map, int numOfEnemies)
         {
-            int numOfEnemies = 5;
 
 
             for (int i = 0; i < numOfEnemies; i++)

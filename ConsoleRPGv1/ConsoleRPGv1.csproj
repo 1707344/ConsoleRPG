@@ -6,6 +6,7 @@
     <AssemblyName>ConsoleRPG</AssemblyName>
     <RootNamespace>ConsoleRPG</RootNamespace>
     <Win32Resource></Win32Resource>
+    <StartupObject>ConsoleRPG.Program</StartupObject>
   </PropertyGroup>
 
   <ItemGroup>
