@@ -14,16 +14,27 @@ namespace ConsoleRPG
     class Freezable : Component
     {
         Renderer frozenVisual;
-        public bool isFrozen;
-        public Freezable(BaseObject obj): base(obj)
+        bool isFrozen;
+        public Freezable(BaseObject obj) : base(obj)
         {
-            frozenVisual = new Renderer(obj, ' ', 10, new Color(219, 241, 253, 0.8f), true);
             
+            frozenVisual = new Renderer(obj, ' ', 10, new Color(219, 241, 253, 0.8f), true  );
+            SetIsFrozen(false);
         }
 
         public override void Update()
         {
             base.Update();
+
+        }
+        public void SetIsFrozen(bool value)
+        {
+            isFrozen = value;
+            frozenVisual.isVisible = value;
+        }
+        public bool GetIsFrozen()
+        {
+            return isFrozen;
         }
     }
 }

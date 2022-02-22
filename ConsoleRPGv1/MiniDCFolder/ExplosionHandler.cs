@@ -216,9 +216,8 @@ namespace ConsoleRPG
             if (affectedCell == null)
             {
                 if (!GetMap().GetObjectsAtPosition(position.x + direction.x, position.y + direction.y).Exists(x => x.obj.GetType() == typeof(Wall))
-                    && (energy - (transferSpeed / 2) * (4 - numOfWallsAround) >= 0)
-)
-                {                    //
+                    && (energy - (transferSpeed / 2) * (4 - numOfWallsAround) >= 0))
+                {                    
 
                     energyLost += actualTransferSpeed / (4 - numOfWallsAround);
                     return new ExplosionCell(GetMap(), position.x + direction.x, position.y + direction.y, transferSpeed, decaySpeed, actualTransferSpeed / (4 - numOfWallsAround));
@@ -235,10 +234,7 @@ namespace ConsoleRPG
                     }
                 }
             }
-            if (energy > 3)
-            {
-                int x = 1 + 1;
-            }
+
 
             return null;
         }

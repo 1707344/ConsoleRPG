@@ -13,6 +13,7 @@ namespace ConsoleRPG
         Health health;
         Cooldown flashingCooldown;
         Patrol patrol;
+        Freezable freezable;
         bool flashing;
         bool flashingSwitch;
         int explosionTime = 500;
@@ -22,8 +23,10 @@ namespace ConsoleRPG
 
         public Monster(Map map, int x, int y, PatrolPoint[] patrolPoints) : base(map)
         {
+            
             Random random = new Random((int)DateTime.Now.Ticks);
 
+            freezable = new Freezable(this);
             collider = new Collider(this, OnCollision);
             health = new Health(this, 2, OnDeath);
             renderer = new Renderer(this, 'Θ', 2, new Color(255, 43, 43), false);
@@ -52,6 +55,11 @@ namespace ConsoleRPG
 
         public override void Update()
         {
+
+            if (freezable.GetIsFrozen())
+            {
+                return;
+            }
 
             base.Update();
 

@@ -29,10 +29,14 @@ namespace ConsoleRPG
                 listeners.Clear();
                 clearListeners = false;
             }
+
+
             foreach (KeyListener keyListener in newListeners)
             {
                 listeners.Add(keyListener);
             }
+
+
             newListeners.Clear();
 
             foreach (KeyListener listener in listeners)
@@ -42,10 +46,6 @@ namespace ConsoleRPG
                     listener.func();
                 }
             }
-
-
-
-
         }
 
         public static void AddListener(KeyListener listener)

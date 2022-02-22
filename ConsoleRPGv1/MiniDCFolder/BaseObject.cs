@@ -40,6 +40,14 @@ namespace ConsoleRPG
             }
         }
 
+        /// <summary>
+        /// Happens after Update
+        /// </summary>
+        public virtual void LateUpdate()
+        {
+
+        }
+
         public void Destroy()
         {
             components.ForEach(x => map.RemoveComponent(x));
@@ -90,7 +98,7 @@ namespace ConsoleRPG
         public void AddComponent(Component component)
         {
             components.Add(component);
-            map.AddComponent(component);
+            map.AddComponentToNewComponents(component);
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace ConsoleRPG
 {
@@ -9,6 +10,10 @@ namespace ConsoleRPG
         public List<BaseObject> newObjects;
         List<Renderer> renderers;
         List<Position> positions;
+
+        List<Component> newComponents;
+
+
         public List<Func<bool>> addingObjecsFuncs;
         public int height;
         public int width;
@@ -26,6 +31,7 @@ namespace ConsoleRPG
             newObjects = new List<BaseObject>();
             renderers = new List<Renderer>();
             positions = new List<Position>();
+            newComponents = new List<Component>();
             height = sizeY;
             width = sizeX;
             CreateBackground(sizeX, sizeY);
@@ -68,6 +74,13 @@ namespace ConsoleRPG
                 Player.turnOffTest = false;
             }
 
+            //Adding new components
+            foreach(Component component in newComponents)
+            {
+                AddComponent(component);
+            }
+            newComponents.Clear();
+
             //Destroys all baseObjects that have destroy set to true
             List<BaseObject> baseObjects = objects.FindAll(x => x.destroy);
             for (int i = 0; i < baseObjects.Count; i++)
@@ -90,54 +103,10 @@ namespace ConsoleRPG
             });
             ConsoleHandler.ClearConsoleCharacters();
 
-            if (!testBool)
-            {
-                testBool = true;
-                Color backgroundColor1 = new Color(Color.Colors.Black);
-                Color textColor = new Color(Color.Colors.White);
-                //Console.Write("\x1b[48;2;" + backgroundColor1.r + ";" + backgroundColor1.g + ";" + backgroundColor1.b + "m");
-                //Console.Write("\x1b[38;2;" + textColor.r + ";" + textColor.g + ";" + textColor.b + "m");
-                for (int x = 0; x < width * 3; x++)
-                {
-                    for (int y = 0; y < height; y++)
-                    {
-                        //Console.SetCursorPosition(x, y);
-                        //Console.Write("░");
-                    }
-                }
-            }
+
 
             UpdateObjects();
-            /*bool test = true;
-            if (test)
-            {
-                //Cleaning up empty space
-                Color emptySpaceColor = new Color(Color.Colors.Black);
-                Console.Write("\x1b[48;2;" + emptySpaceColor.r + ";" + emptySpaceColor.g + ";" + emptySpaceColor.b + "m");
-                for (int x = 1; x < width * 2; x += 2)
-                {
-                    for (int y = 0; y < height; y++)
-                    {
-                        if (!emptySpaceWithColor.Exists(e => e.x == x && e.y == y))
-                        {
-                            Console.SetCursorPosition(x, y);
-                            Console.Write(" ");
-                        }
-                        else if (emptySpaceWithColor.Exists(e => e.r.obj == null
-                         || (e.x - 1 != e.r.obj.GetComponent<Position>().x || e.y != e.r.obj.GetComponent<Position>().y)
-                         || e.r.isVisible == false))
-                        {
-                            emptySpaceWithColor.Remove(emptySpaceWithColor.Find(e => e.x == x && e.y == y));
-                        }
-                    }
-                }
 
-                foreach ((int x, int y, Renderer r) pos in emptySpaceWithColor)
-                {
-                    //Console.SetCursorPosition(pos.x, pos.y);
-                    ////Console.Write(" ");
-                }
-            }*/
 
 
             foreach (Position position in positions)
@@ -159,7 +128,10 @@ namespace ConsoleRPG
                 {
                     foreach (Renderer renderer in position1.obj.GetComponents<Renderer>())
                     {
-                        renderers.Add(renderer);
+                        if (renderer.isVisible)
+                        {
+                            renderers.Add(renderer);
+                        }
                     }
                 }
 
@@ -247,7 +219,13 @@ namespace ConsoleRPG
             }
         }
 
-        public void AddComponent(Component component)
+
+        public void AddComponentToNewComponents(Component component)
+        {
+            newComponents.Add(component);
+        }
+
+        void AddComponent(Component component)
         {
             switch (component.GetType().Name)
             {
@@ -274,9 +252,37 @@ namespace ConsoleRPG
         }
         public List<Position> GetObjectsAtPosition(int posX, int posY)
         {
+
+
             return positions.FindAll(x => x.x == posX && x.y == posY);
+        
         }
 
+        /// <summary>
+        /// Adds the newObjects list into objects list
+        /// </summary>
+        public void ForceNewObjects()
+        {
+            foreach (BaseObject newObject in newObjects)
+            {
+                objects.Add(newObject);
+            }
+            newObjects.Clear();
+        }
+
+        /// <summary>
+        /// Adds the new Components list into the components list
+        /// </summary>
+        public void ForceNewComponents()
+        {
+            //Adding new components
+            foreach (Component component in newComponents)
+            {
+                AddComponent(component);
+            }
+            newComponents.Clear();
+
+        }
 
         //For testing
         public void ResetBackgroundColors()

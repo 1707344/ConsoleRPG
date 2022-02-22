@@ -31,11 +31,11 @@ namespace ConsoleRPG
 
         float fireballStrength = 20;
         float fireballSpeed = 100;
+        int freezeStrength = 5;
 
         public Player(Map map, int x, int y) : base(map)
         {
             freezable = new Freezable(this);
-
 
             baseColor = new Color(92, 255, 133, 0.99f);
             fireballAimFlashColor1 = new Color(255, 100, 50, 0.99f);
@@ -56,33 +56,22 @@ namespace ConsoleRPG
 
         public void LoadInput()
         {
-            bool swapAimAndMove = false;
-            if (swapAimAndMove)
-            {
 
-                InputHandler.AddListener(new KeyListener(MoveUp, ConsoleKey.UpArrow));
-                InputHandler.AddListener(new KeyListener(MoveDown, ConsoleKey.DownArrow));
-                InputHandler.AddListener(new KeyListener(MoveLeft, ConsoleKey.LeftArrow));
-                InputHandler.AddListener(new KeyListener(MoveRight, ConsoleKey.RightArrow));
-                InputHandler.AddListener(new KeyListener(AimUp, ConsoleKey.W));
-                InputHandler.AddListener(new KeyListener(AimDown, ConsoleKey.S));
-                InputHandler.AddListener(new KeyListener(AimLeft, ConsoleKey.A));
-                InputHandler.AddListener(new KeyListener(AimRight, ConsoleKey.D));
-            }
-            else
-            {
+            //Movement
+            InputHandler.AddListener(new KeyListener(MoveUp, ConsoleKey.W));
+            InputHandler.AddListener(new KeyListener(MoveDown, ConsoleKey.S));
+            InputHandler.AddListener(new KeyListener(MoveLeft, ConsoleKey.A));
+            InputHandler.AddListener(new KeyListener(MoveRight, ConsoleKey.D));
 
-                InputHandler.AddListener(new KeyListener(MoveUp, ConsoleKey.W));
-                InputHandler.AddListener(new KeyListener(MoveDown, ConsoleKey.S));
-                InputHandler.AddListener(new KeyListener(MoveLeft, ConsoleKey.A));
-                InputHandler.AddListener(new KeyListener(MoveRight, ConsoleKey.D));
-                InputHandler.AddListener(new KeyListener(AimUp, ConsoleKey.UpArrow));
-                InputHandler.AddListener(new KeyListener(AimDown, ConsoleKey.DownArrow));
-                InputHandler.AddListener(new KeyListener(AimLeft, ConsoleKey.LeftArrow));
-                InputHandler.AddListener(new KeyListener(AimRight, ConsoleKey.RightArrow));
-            }
-            //InputHandler.AddListener(new KeyListener(ShootFireball, ConsoleKey.F));
+            //Aiming
+            InputHandler.AddListener(new KeyListener(AimUp, ConsoleKey.UpArrow));
+            InputHandler.AddListener(new KeyListener(AimDown, ConsoleKey.DownArrow));
+            InputHandler.AddListener(new KeyListener(AimLeft, ConsoleKey.LeftArrow));
+            InputHandler.AddListener(new KeyListener(AimRight, ConsoleKey.RightArrow));
+
+            //Spells
             InputHandler.AddListener(new KeyListener(ShootFireball, ConsoleKey.Spacebar));
+            InputHandler.AddListener(new KeyListener(FreezeSpell, ConsoleKey.V));
 
         }
 
@@ -198,15 +187,10 @@ namespace ConsoleRPG
             direction = Movement.Direction.East;
             return true;
         }
-        public bool UnSelectSpell()
-        {
-            if (aimingIndicator == null)
-            {
-                return true;
-            }
-            fireballAim = false;
 
-            aimingIndicator.destroy = true;
+        public bool FreezeSpell()
+        {
+            GetMap().newObjects.Add(new FreezeSource(GetMap(), (position.x, position.y), freezeStrength));
             return true;
         }
 

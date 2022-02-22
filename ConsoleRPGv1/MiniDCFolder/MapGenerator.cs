@@ -116,6 +116,9 @@ namespace ConsoleRPG
 
             Map map = CharArrToMap(charMap);
 
+            map.ForceNewComponents();
+            map.ForceNewObjects();
+
             //Adding player and enemies and stuff
             AddObjects(map, difficulty);
             
