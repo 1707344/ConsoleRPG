@@ -14,6 +14,7 @@ namespace ConsoleRPG
         Collider collider;
         Movement movement;
         Health health;
+        Freezable freezable;
         PathFinder pathFinder;
         Patrol patrol;
         Cooldown movementCooldown;
@@ -37,6 +38,7 @@ namespace ConsoleRPG
             //Components
             collider = new Collider(this, OnCollision);
             health = new Health(this, 2, OnDeath);
+            freezable = new Freezable(this, 2000);
             renderer = new Renderer(this, 'ô', 2, new Color(255, 200, 43), false);
             position = new Position(this, x, y);
             movement = new Movement(this);
@@ -65,6 +67,13 @@ namespace ConsoleRPG
         public override void Update()
         {
             base.Update();
+
+            if (freezable.GetIsFrozen())
+            {
+                DestroyIndicators();
+                return;
+            }
+
             if (!startingCooldownStarted)
             {
                 startingCooldown.StartCooldown();

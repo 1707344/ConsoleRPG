@@ -14,10 +14,13 @@ namespace ConsoleRPG
     class Freezable : Component
     {
         Renderer frozenVisual;
+        public float frozenAmount;
+
+        float frozenThreshold;//Once frozen amount gets to frozenThreshold the obj will be frozen
         bool isFrozen;
-        public Freezable(BaseObject obj) : base(obj)
+        public Freezable(BaseObject obj, float frozenThreshold) : base(obj)
         {
-            
+            this.frozenThreshold = frozenThreshold;
             frozenVisual = new Renderer(obj, ' ', 10, new Color(219, 241, 253, 0.8f), true  );
             SetIsFrozen(false);
         }
@@ -25,12 +28,38 @@ namespace ConsoleRPG
         public override void Update()
         {
             base.Update();
-
+            if(frozenAmount >= frozenThreshold)
+            {
+                SetIsFrozen(true);
+                frozenVisual.color.a = 0.8f;
+            }
+            else
+            {
+                SetColor();
+            }
         }
+
+        void SetColor()
+        {
+            frozenVisual.color.a = GetFrozenPercent();
+        }
+
+        public float GetFrozenPercent()
+        {
+            float frozenPercent = frozenAmount / frozenThreshold;
+            if(frozenPercent > 1)
+            {
+                frozenPercent = 1;
+            }else if(frozenPercent < 0)
+            {
+                frozenPercent = 0;
+            }
+            return frozenPercent;
+        }
+
         public void SetIsFrozen(bool value)
         {
             isFrozen = value;
-            frozenVisual.isVisible = value;
         }
         public bool GetIsFrozen()
         {

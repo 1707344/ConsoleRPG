@@ -26,7 +26,7 @@ namespace ConsoleRPG
             
             Random random = new Random((int)DateTime.Now.Ticks);
 
-            freezable = new Freezable(this);
+            freezable = new Freezable(this, 2000);
             collider = new Collider(this, OnCollision);
             health = new Health(this, 2, OnDeath);
             renderer = new Renderer(this, 'Θ', 2, new Color(255, 43, 43), false);
@@ -56,12 +56,12 @@ namespace ConsoleRPG
         public override void Update()
         {
 
+            base.Update();
             if (freezable.GetIsFrozen())
             {
                 return;
             }
 
-            base.Update();
 
             Position playerPos = MiniDC.player.GetComponent<Position>();
 
@@ -82,7 +82,7 @@ namespace ConsoleRPG
                 isExploding = true;
                 PrepareToExplode();
             }
-            else if (movementCooldown.IsCooldownDone())
+            else if (movementCooldown.IsCooldownDone(freezable.GetFrozenPercent() * movementCooldown.GetLength()))
             {
                 if(pathFinder.GetMoveNum(MiniDC.player.GetComponent<Position>()) < chasePlayerDist)
                 {

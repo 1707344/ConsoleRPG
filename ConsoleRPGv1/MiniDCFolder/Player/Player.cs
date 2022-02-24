@@ -4,7 +4,7 @@ namespace ConsoleRPG
 {
     public class Player : BaseObject
     {
-        Freezable freezable;
+
 
         Renderer renderer;
         Position position;
@@ -35,7 +35,6 @@ namespace ConsoleRPG
 
         public Player(Map map, int x, int y) : base(map)
         {
-            freezable = new Freezable(this);
 
             baseColor = new Color(92, 255, 133, 0.99f);
             fireballAimFlashColor1 = new Color(255, 100, 50, 0.99f);
